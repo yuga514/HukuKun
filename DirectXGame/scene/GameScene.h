@@ -52,7 +52,13 @@ private: // メンバ変数
 	// ゲームシーン用
 	char str[100] = { 0 };
 	unsigned int scene = 0;
+	bool handFlag = 0;
+	const float displacement = 10.0f;
+
+	POINT handPoint = {};
 
 	Sprite* title = nullptr;
 	Sprite* background = nullptr;
+	Sprite* hand1 = nullptr;
+	Sprite* hand2 = nullptr;
 };

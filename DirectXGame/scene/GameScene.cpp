@@ -12,6 +12,8 @@ GameScene::~GameScene()
 {
 	safe_delete(title);
 	safe_delete(background);
+	safe_delete(hand1);
+	safe_delete(hand2);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -42,18 +44,28 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	// テクスチャ読み込み
 	Sprite::LoadTexture(1, L"Resources/test1.png");
 	Sprite::LoadTexture(2, L"Resources/test2.png");
+	Sprite::LoadTexture(3, L"Resources/hand1.png");
+	Sprite::LoadTexture(4, L"Resources/hand2.png");
 
 	// スプライト生成
 	title = Sprite::Create(1, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
 	background = Sprite::Create(2, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
+	hand1 = Sprite::Create(3, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
+	hand2 = Sprite::Create(4, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 1, 0 });
 	camera->SetDistance(3.0f);
+
+	//ShowCursor(FALSE);
+
 }
 
 void GameScene::Update()
 {
+	// マウスの現在の座標を取得する
+	GetCursorPos(&handPoint);
+
 	// タイトル
 	if (scene == 0) {
 		if (input->TriggerMouse(0)) {
@@ -63,10 +75,21 @@ void GameScene::Update()
 
 	// ゲームシーン
 	if (scene == 1) {
-
+		/*if (handPoint.x < 0) {
+			
+		}*/
 	}
 
+	// アップデート
 	camera->Update();
+	// セットポジション
+	hand1->SetPosition({ (float)handPoint.x - 98, (float)handPoint.y - 98 });
+	hand2->SetPosition({ (float)handPoint.x - 98, (float)handPoint.y - 98 });
+
+	sprintf_s(str, "handPoint.x = %f", (float)handPoint.x);
+	debugText.Print(str, 0, 0, 2);
+	sprintf_s(str, "handPoint.y = %f", (float)handPoint.y);
+	debugText.Print(str, 0, 40, 2);
 }
 
 void GameScene::Draw()
@@ -82,6 +105,9 @@ void GameScene::Draw()
 	if (scene == 0) {
 		title->Draw();
 	}
+	if (scene == 1) {
+		background->Draw();
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -96,6 +122,7 @@ void GameScene::Draw()
 
 	// ここに3Dオブジェクトの描画処理を追加できる
 
+
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 #pragma endregion
@@ -106,7 +133,12 @@ void GameScene::Draw()
 
 	// ここに前景スプライトの描画処理を追加できる
 	if (scene == 1) {
-		background->Draw();
+		if (input->PushMouse(0) == 0) {
+			hand1->Draw();
+		}
+		if (input->PushMouse(0)) {
+			hand2->Draw();
+		}
 	}
 
 	// デバッグテキストの描画
