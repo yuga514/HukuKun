@@ -45,18 +45,14 @@ public: // メンバ関数
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
+	DebugCamera* camera = nullptr;
 	Audio* audio = nullptr;
 	DebugText debugText;
 
 	// ゲームシーン用
-	DebugCamera* camera = nullptr;
-	Sprite* spriteBG = nullptr;
+	char str[100] = { 0 };
+	unsigned int scene = 0;
 
-	Model* modelSkydome = nullptr;
-	Model* modelGround = nullptr;
-	Model* modelFighter = nullptr;
-
-	Object3d* objSkydome = nullptr;
-	Object3d* objGround = nullptr;
-	Object3d* objFighter = nullptr;
+	Sprite* title = nullptr;
+	Sprite* background = nullptr;
 };

@@ -4,25 +4,14 @@
 
 using namespace DirectX;
 
-#pragma region 変数宣言
-
-
-
-#pragma endregion
-
 GameScene::GameScene()
 {
 }
 
 GameScene::~GameScene()
 {
-	safe_delete(spriteBG);
-	safe_delete(objSkydome);
-	safe_delete(objGround);
-	safe_delete(objFighter);
-	safe_delete(modelSkydome);
-	safe_delete(modelGround);
-	safe_delete(modelFighter);
+	safe_delete(title);
+	safe_delete(background);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
@@ -51,22 +40,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 	debugText.Initialize(debugTextTexNumber);
 
 	// テクスチャ読み込み
-	if (!Sprite::LoadTexture(1, L"Resources/background.png")) {
-		assert(0);
-		return;
-	}
-	// 背景スプライト生成
-	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
+	Sprite::LoadTexture(1, L"Resources/test1.png");
+	Sprite::LoadTexture(2, L"Resources/test2.png");
 
-	// モデル読み込み
-	modelSkydome = Model::CreateFromOBJ("skydome");
-	modelGround = Model::CreateFromOBJ("ground");
-	modelFighter = Model::CreateFromOBJ("chr_sword");
-
-	// 3Dオブジェクト生成
-	objSkydome = Object3d::Create(modelSkydome);
-	objGround = Object3d::Create(modelGround);
-	objFighter = Object3d::Create(modelFighter);
+	// スプライト生成
+	title = Sprite::Create(1, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
+	background = Sprite::Create(2, { 0.0f,0.0f }, { 1.25f,1.25f,1.25f,1 });
 
 	// カメラ注視点をセット
 	camera->SetTarget({ 0, 1, 0 });
@@ -75,11 +54,19 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio)
 
 void GameScene::Update()
 {
-	camera->Update();
+	// タイトル
+	if (scene == 0) {
+		if (input->TriggerMouse(0)) {
+			scene = 1;
+		}
+	}
 
-	objSkydome->Update();
-	objGround->Update();
-	objFighter->Update();
+	// ゲームシーン
+	if (scene == 1) {
+
+	}
+
+	camera->Update();
 }
 
 void GameScene::Draw()
@@ -92,26 +79,24 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 
 	// ここに背景スプライトの描画処理を追加できる
-
-
-	// 背景スプライト描画
-	spriteBG->Draw();
+	if (scene == 0) {
+		title->Draw();
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
+
 	// 深度バッファクリア
 	dxCommon->ClearDepthBuffer();
 #pragma endregion
 
 #pragma region 3D描画
-	// 3Dオブジェクトの描画
+	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(cmdList);
 
 	// ここに3Dオブジェクトの描画処理を追加できる
-	objSkydome->Draw();
-	objGround->Draw();
-	objFighter->Draw();
 
+	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 #pragma endregion
 
@@ -120,7 +105,9 @@ void GameScene::Draw()
 	Sprite::PreDraw(cmdList);
 
 	// ここに前景スプライトの描画処理を追加できる
-
+	if (scene == 1) {
+		background->Draw();
+	}
 
 	// デバッグテキストの描画
 	debugText.DrawAll(cmdList);
