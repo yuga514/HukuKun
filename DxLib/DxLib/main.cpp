@@ -23,34 +23,66 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// 画像などのリソースデータの変数宣言と読み込み
-
+	int title = LoadGraph("Resources/test1.png");
+	int background = LoadGraph("Resources/test2.png");
+	int hand1 = LoadGraph("Resources/hand1.png");
+	int hand2 = LoadGraph("Resources/hand2.png");
 
 	// ゲームループで使う変数の宣言
 	char keys[256] = { 0 }; // 最新のキーボード情報用
 	char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
 
+	unsigned int scene = 0;
+	int MouseX, MouseY;
 
 	// ゲームループ
 	while (1)
 	{
-		//最新のキーボード情報だったものは１フレーム前のキーボード情報として保存
+		// 最新のキーボード情報だったものは１フレーム前のキーボード情報として保存
 
 
-		//最新のキーボード情報を取得
+		// 最新のキーボード情報を取得
 		GetHitKeyStateAll(keys);
 
-		//画面クリア
+		// 画面クリア
 		ClearDrawScreen();
 		//---------  ここからプログラムを記述  ----------//
 
-		//更新処理
+		// 更新処理
+
+		// マウスの位置を取得
+		GetMousePoint(&MouseX, &MouseY);
+
+		if (scene == 0) {
+			// 左クリック
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
+			{
+				scene = 1;
+			}
+		}
+		if (scene == 1) {
+			// マウス非表示
+			SetMouseDispFlag(FALSE);
 
 
+		}
 
 
-		//描画処理
+		// 描画処理
 
-
+		if (scene == 0) {
+			DrawGraph(0, 0, title, TRUE);
+		}
+		if (scene == 1) {
+			DrawGraph(0, 0, background, TRUE);
+			// 左クリック
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
+				DrawGraph(MouseX - 32, MouseY - 32, hand1, TRUE);
+			}
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) {
+				DrawGraph(MouseX - 32, MouseY - 32, hand2, TRUE);
+			}
+		}
 
 
 		//---------  ここまでにプログラムを記述  ---------//
