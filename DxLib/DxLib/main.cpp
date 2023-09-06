@@ -50,7 +50,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int background = LoadGraph("Resources/test2.png");
 	int hand1 = LoadGraph("Resources/hand1.png");
 	int hand2 = LoadGraph("Resources/hand2.png");
-	int face1 = LoadGraph("Resources/sampleface.png");
+	int face1 = LoadGraph("Resources/sampleface1.png");
 	int face2 = LoadGraph("Resources/sampleface2.png");
 
 	// ÉQÅ[ÉÄÉãÅ[Év
