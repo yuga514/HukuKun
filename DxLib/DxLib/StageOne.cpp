@@ -43,10 +43,11 @@ void StageOne::Update()
 void StageOne::Draw()
 {
 	// 顔
-	DrawGraph(384, 104, face, TRUE);
+	DrawGraph(FacePosition.x, FacePosition.y, face, TRUE);
 
 	// 目
 	DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
+
 	DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
 
 	// 手
@@ -61,7 +62,7 @@ void StageOne::Draw()
 // 当たり判定
 void StageOne::Collision()
 {
-	// マウスをクリックしていないとき、掴みフラグをオフにする
+	// マウスをクリックしていないとき、パーツを離す
 	for (int i = 0; i < 2; i++) {
 		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
 			catchFlag[i] = 0;
@@ -83,15 +84,23 @@ void StageOne::Collision()
 		}
 	}
 
-	// 左目の掴みフラグがオンになったら、マウスに追尾する
+	// 左目を掴んでいるとき、マウスに追尾する
 	if (catchFlag[0] == 1) {
 		PartsPosition[0].x = MousePosition.x - 64;
 		PartsPosition[0].y = MousePosition.y - 64;
 	}
-	// 右目の掴みフラグがオンになったら、マウスに追尾する
+	// 右目を掴んでいるとき、マウスに追尾する
 	else if (catchFlag[1] == 1) {
 		PartsPosition[1].x = MousePosition.x - 64;
 		PartsPosition[1].y = MousePosition.y - 64;
+	}
+
+	// 左目のパーツと顔の当たり判定
+	if (FacePosition.x < PartsPosition[0].x + 128 && PartsPosition[0].x < FacePosition.x + 512 &&
+		FacePosition.y < PartsPosition[0].y + 128 && PartsPosition[0].y < FacePosition.y + 512) {
+		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
+			SetMouseDispFlag(TRUE);
+		}
 	}
 }
 

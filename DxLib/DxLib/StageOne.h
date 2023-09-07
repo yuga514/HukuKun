@@ -33,12 +33,13 @@ private: // メンバ変数
 	bool catchFlag[2] = {};
 
 	XMINT2 MousePosition = {};
+	XMINT2 FacePosition = { 384,104 };
 	XMINT2 PartsPosition[2] = { { 100,100 }, { 100,500 } };
 
 	// 画像などのリソースデータの変数宣言
-	int face = LoadGraph("Resources/sampleface2.png");
-	int hand1 = LoadGraph("Resources/hand1.png");
-	int hand2 = LoadGraph("Resources/hand2.png");
-	int eye1 = LoadGraph("Resources/eye1.png");
-	int eye2 = LoadGraph("Resources/eye2.png");
+	int face = 0;
+	int hand1 = 0;
+	int hand2 = 0;
+	int eye1 = 0;
+	int eye2 = 0;
 };
