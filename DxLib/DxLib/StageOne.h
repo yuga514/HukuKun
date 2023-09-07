@@ -26,11 +26,23 @@ public: // メンバ関数
 	// 当たり判定
 	void Collision();
 
+	// 当たり判定のテンプレート
+	void CollisionTemplate(unsigned int number);
+
 	// リセット
 	void Reset();
 
+	// ネクストシーンフラグの取得
+	unsigned int GetNextSceneFlag() { return nextSceneFlag; }
+
 private: // メンバ変数
+	unsigned int alpha = 0;
+	unsigned int score = 0;
+	unsigned int number = 2;
 	bool catchFlag[2] = {};
+	bool drawFlag[2] = {};
+	bool scoreFlag[2] = {};
+	bool nextSceneFlag = 0;
 
 	XMINT2 MousePosition = {};
 	XMINT2 FacePosition = { 384,104 };
