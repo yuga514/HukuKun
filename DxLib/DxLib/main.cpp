@@ -63,6 +63,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	int title = LoadGraph("Resources/test1.png");
 	int background = LoadGraph("Resources/test2.png");
 	int ghost = LoadGraph("Resources/ghost/ghost.png");
+	int okame = LoadGraph("Resources/okame/okame.png");
 
 	// ステージ1生成
 	stageOne = new StageOne();
@@ -116,7 +117,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (scene == SAMPLE2) {
 			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(384, 104, ghost, TRUE);
+			DrawGraph(384, 104, okame, TRUE);
 		}
 
 		//---------  ここまでにプログラムを記述  ---------//

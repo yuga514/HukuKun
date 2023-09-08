@@ -25,6 +25,9 @@ void StageOne::Initialize()
 	hand2 = LoadGraph("Resources/hand2.png");
 	parts[0] = LoadGraph("Resources/ghost/LeftEye.png");
 	parts[1] = LoadGraph("Resources/ghost/RightEye.png");
+	parts[2] = LoadGraph("Resources/ghost/mouth.png");
+	parts[3] = LoadGraph("Resources/ghost/LeftHand.png");
+	parts[4] = LoadGraph("Resources/ghost/RightHand.png");
 }
 
 // 更新
@@ -36,14 +39,15 @@ void StageOne::Update()
 	// マウスの位置を取得
 	GetMousePoint(&MousePosition.x, &MousePosition.y);
 
-	// 当たり判定
-	Collision();
-
-	// スコア加算
-	ScoreAddition();
+	for (int i = 0; i < partsNumber; i++) {
+		// 当たり判定
+		Collision(i);
+		// スコア加算
+		ScoreAddition(i);
+	}
 
 	// 結果発表
-	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
+	if (drawFlag[0] == 1 && drawFlag[1] == 1 && drawFlag[2] == 1 && drawFlag[3] == 1 && drawFlag[4] == 1) {
 		if (alpha < 255) {
 			alpha += 3;
 		}
@@ -53,22 +57,24 @@ void StageOne::Update()
 // 描画
 void StageOne::Draw()
 {
-	// 顔
+	// プレート
 	DrawGraph(PlatePosition.x, PlatePosition.y, plate, TRUE);
 
-	// 目
-	if (drawFlag[0] == 0) {
-		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, parts[0], TRUE);
-	}
-	if (drawFlag[1] == 0) {
-		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, parts[1], TRUE);
+	// パーツ
+	for (int i = 0; i < partsNumber; i++) {
+		if (drawFlag[i] == 0) {
+			DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
+		}
 	}
 
 	// 結果発表
-	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
+	if (drawFlag[0] == 1 && drawFlag[1] == 1 && drawFlag[2] == 1 && drawFlag[3] == 1 && drawFlag[4] == 1) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, parts[0], TRUE);
-		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, parts[1], TRUE);
+		for (int i = 0; i < partsNumber; i++) {
+			if (drawFlag[i] == 1) {
+				DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
+			}
+		}
 	}
 
 	// 手
@@ -85,25 +91,7 @@ void StageOne::Draw()
 }
 
 // 当たり判定
-void StageOne::Collision()
-{
-	// 左目
-	CollisionTemplate(0);
-	// 右目
-	CollisionTemplate(1);
-}
-
-// スコア加算
-void StageOne::ScoreAddition()
-{
-	// 左目
-	ScoreAdditionTemplate(0);
-	// 右目
-	ScoreAdditionTemplate(1);
-}
-
-// 当たり判定のテンプレート
-void StageOne::CollisionTemplate(unsigned int number)
+void StageOne::Collision(unsigned int number)
 {
 	// 顔にパーツを置いていないとき、当たり判定が作動
 	if (drawFlag[number] == 0) {
@@ -133,8 +121,8 @@ void StageOne::CollisionTemplate(unsigned int number)
 	}
 }
 
-// スコア加算のテンプレート
-void StageOne::ScoreAdditionTemplate(unsigned int number)
+// スコア加算
+void StageOne::ScoreAddition(unsigned int number)
 {
 	// 顔にパーツを置いたら、スコアを判定する
 	if (scoreFlag[number] == 0 && drawFlag[number] == 1) {
@@ -142,31 +130,31 @@ void StageOne::ScoreAdditionTemplate(unsigned int number)
 			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[0] &&
 			PerfectPartsPosition[number].y - judge[0] < PartsPosition[number].y &&
 			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[0]) {
-			score += 50;
+			score += 20;
 		}
 		else if (PerfectPartsPosition[number].x - judge[1] < PartsPosition[number].x &&
 			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[1] &&
 			PerfectPartsPosition[number].y - judge[1] < PartsPosition[number].y &&
 			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[1]) {
-			score += 40;
+			score += 16;
 		}
 		else if (PerfectPartsPosition[number].x - judge[2] < PartsPosition[number].x &&
 			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[2] &&
 			PerfectPartsPosition[number].y - judge[2] < PartsPosition[number].y &&
 			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[2]) {
-			score += 30;
+			score += 12;
 		}
 		else if (PerfectPartsPosition[number].x - judge[3] < PartsPosition[number].x &&
 			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[3] &&
 			PerfectPartsPosition[number].y - judge[3] < PartsPosition[number].y &&
 			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[3]) {
-			score += 20;
+			score += 8;
 		}
 		else if (PerfectPartsPosition[number].x - judge[4] < PartsPosition[number].x &&
 			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[4] &&
 			PerfectPartsPosition[number].y - judge[4] < PartsPosition[number].y &&
 			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[4]) {
-			score += 10;
+			score += 4;
 		}
 		scoreFlag[number] = 1;
 	}
@@ -183,5 +171,8 @@ void StageOne::Reset()
 		scoreFlag[i] = 0;
 	}
 	PartsPosition[0] = { 100,100 };
-	PartsPosition[1] = { 100,500 };
+	PartsPosition[1] = { 100,300 };
+	PartsPosition[2] = { 100,500 };
+	PartsPosition[3] = { 1052,200 };
+	PartsPosition[4] = { 1052,400 };
 }
