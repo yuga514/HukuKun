@@ -161,8 +161,14 @@ void SceneChange()
 	}
 	if (scene == 2) {
 		if (GetMouseInputLog(&button, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(button & MOUSE_INPUT_LEFT) != 0 && stageOne->GetNextSceneFlag() == 1) {
-			scene = 3;
+			(button & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
+			if (50 <= stageOne->GetScore()) {
+				scene = 3;
+			}
+			if (stageOne->GetScore() < 50) {
+				scene = 0;
+				Reset();
+			}
 		}
 	}
 }
@@ -170,5 +176,5 @@ void SceneChange()
 // ƒŠƒZƒbƒg
 void Reset()
 {
-	// ˆ—
+	stageOne->Reset();
 }

@@ -26,27 +26,37 @@ public: // メンバ関数
 	// 当たり判定
 	void Collision();
 
+	// スコア加算
+	void ScoreAddition();
+
 	// 当たり判定のテンプレート
 	void CollisionTemplate(unsigned int number);
+
+	// スコア加算のテンプレート
+	void ScoreAdditionTemplate(unsigned int number);
 
 	// リセット
 	void Reset();
 
-	// ネクストシーンフラグの取得
-	unsigned int GetNextSceneFlag() { return nextSceneFlag; }
+	// スコアの取得
+	unsigned int GetScore() { return score; }
+
+	// アルファ値の取得
+	unsigned int GetAlpha() { return alpha; }
 
 private: // メンバ変数
-	unsigned int alpha = 0;
+	const unsigned int judge[5] = { 7,14,21,28,35 };
+	const unsigned int parts = 2;
 	unsigned int score = 0;
-	unsigned int number = 2;
+	unsigned int alpha = 0;
 	bool catchFlag[2] = {};
 	bool drawFlag[2] = {};
 	bool scoreFlag[2] = {};
-	bool nextSceneFlag = 0;
 
+	const XMINT2 PerfectPartsPosition[2] = { { 480,200 }, { 672,200 } };
+	XMINT2 PartsPosition[2] = { { 100,100 }, { 100,500 } };
 	XMINT2 MousePosition = {};
 	XMINT2 FacePosition = { 384,104 };
-	XMINT2 PartsPosition[2] = { { 100,100 }, { 100,500 } };
 
 	// 画像などのリソースデータの変数宣言
 	int face = 0;
