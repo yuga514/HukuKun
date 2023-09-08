@@ -24,16 +24,10 @@ public: // メンバ関数
 	void Draw();
 
 	// 当たり判定
-	void Collision();
+	void Collision(unsigned int number);
 
 	// スコア加算
-	void ScoreAddition();
-
-	// 当たり判定のテンプレート
-	void CollisionTemplate(unsigned int number);
-
-	// スコア加算のテンプレート
-	void ScoreAdditionTemplate(unsigned int number);
+	void ScoreAddition(unsigned int number);
 
 	// リセット
 	void Reset();
@@ -53,8 +47,8 @@ private: // メンバ変数
 	bool drawFlag[5] = {};
 	bool scoreFlag[5] = {};
 
-	const XMINT2 PerfectPartsPosition[5] = { { 480,200 }, { 672,200 } };
-	XMINT2 PartsPosition[5] = { { 100,100 }, { 100,500 } };
+	const XMINT2 PerfectPartsPosition[5] = { { 480,200 }, { 672,200 }, { 576,296 }, { 368,328 }, { 784,328 } };
+	XMINT2 PartsPosition[5] = { { 100,100 }, { 100,300 }, { 100,500 }, { 1052,200 }, { 1052,400 } };
 	XMINT2 MousePosition = {};
 	XMINT2 PlatePosition = { 384,104 };
 
