@@ -46,22 +46,21 @@ public: // メンバ関数
 
 private: // メンバ変数
 	const unsigned int judge[5] = { 7,14,21,28,35 };
-	const unsigned int parts = 2;
+	const unsigned int partsNumber = 5;
 	unsigned int score = 0;
 	unsigned int alpha = 0;
-	bool catchFlag[2] = {};
-	bool drawFlag[2] = {};
-	bool scoreFlag[2] = {};
+	bool catchFlag[5] = {};
+	bool drawFlag[5] = {};
+	bool scoreFlag[5] = {};
 
-	const XMINT2 PerfectPartsPosition[2] = { { 480,200 }, { 672,200 } };
-	XMINT2 PartsPosition[2] = { { 100,100 }, { 100,500 } };
+	const XMINT2 PerfectPartsPosition[5] = { { 480,200 }, { 672,200 } };
+	XMINT2 PartsPosition[5] = { { 100,100 }, { 100,500 } };
 	XMINT2 MousePosition = {};
-	XMINT2 FacePosition = { 384,104 };
+	XMINT2 PlatePosition = { 384,104 };
 
 	// 画像などのリソースデータの変数宣言
-	int face = 0;
+	int plate = 0;
 	int hand1 = 0;
 	int hand2 = 0;
-	int eye1 = 0;
-	int eye2 = 0;
+	int parts[5] = {};
 };

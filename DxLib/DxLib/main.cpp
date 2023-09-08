@@ -62,7 +62,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// 画像などのリソースデータの変数宣言と読み込み
 	int title = LoadGraph("Resources/test1.png");
 	int background = LoadGraph("Resources/test2.png");
-	int perfectFace = LoadGraph("Resources/sampleface1.png");
+	int ghost = LoadGraph("Resources/ghost/ghost.png");
 
 	// ステージ1生成
 	stageOne = new StageOne();
@@ -108,7 +108,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (scene == SAMPLE1) {
 			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(384, 104, perfectFace, TRUE);
+			DrawGraph(384, 104, ghost, TRUE);
 		}
 		if (scene == STAGE1) {
 			DrawGraph(0, 0, background, TRUE);
@@ -116,7 +116,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (scene == SAMPLE2) {
 			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(384, 104, perfectFace, TRUE);
+			DrawGraph(384, 104, ghost, TRUE);
 		}
 
 		//---------  ここまでにプログラムを記述  ---------//
@@ -137,7 +137,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// デストラクタ
 	DeleteGraph(title);
 	DeleteGraph(background);
-	DeleteGraph(perfectFace);
+	DeleteGraph(ghost);
 	stageOne->~StageOne();
 
 	// Dxライブラリ終了処理

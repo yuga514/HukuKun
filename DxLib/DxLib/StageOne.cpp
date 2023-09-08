@@ -8,22 +8,23 @@ StageOne::StageOne()
 // デストラクタ
 StageOne::~StageOne()
 {
-	DeleteGraph(face);
+	DeleteGraph(plate);
 	DeleteGraph(hand1);
 	DeleteGraph(hand2);
-	DeleteGraph(eye1);
-	DeleteGraph(eye2);
+	for (int i = 0; i < partsNumber; i++) {
+		DeleteGraph(parts[i]);
+	}
 }
 
 // 初期化
 void StageOne::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	face = LoadGraph("Resources/sampleface2.png");
+	plate = LoadGraph("Resources/ghost/plate.png");
 	hand1 = LoadGraph("Resources/hand1.png");
 	hand2 = LoadGraph("Resources/hand2.png");
-	eye1 = LoadGraph("Resources/eye1.png");
-	eye2 = LoadGraph("Resources/eye2.png");
+	parts[0] = LoadGraph("Resources/ghost/LeftEye.png");
+	parts[1] = LoadGraph("Resources/ghost/RightEye.png");
 }
 
 // 更新
@@ -53,21 +54,21 @@ void StageOne::Update()
 void StageOne::Draw()
 {
 	// 顔
-	DrawGraph(FacePosition.x, FacePosition.y, face, TRUE);
+	DrawGraph(PlatePosition.x, PlatePosition.y, plate, TRUE);
 
 	// 目
 	if (drawFlag[0] == 0) {
-		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
+		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, parts[0], TRUE);
 	}
 	if (drawFlag[1] == 0) {
-		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
+		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, parts[1], TRUE);
 	}
 
 	// 結果発表
 	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
-		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
+		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, parts[0], TRUE);
+		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, parts[1], TRUE);
 	}
 
 	// 手
@@ -123,8 +124,8 @@ void StageOne::CollisionTemplate(unsigned int number)
 			PartsPosition[number].y = MousePosition.y - 64;
 		}
 		// 顔とパーツの当たり判定
-		if (FacePosition.x < PartsPosition[number].x + 128 && PartsPosition[number].x < FacePosition.x + 512 &&
-			FacePosition.y < PartsPosition[number].y + 128 && PartsPosition[number].y < FacePosition.y + 512) {
+		if (PlatePosition.x < PartsPosition[number].x + 128 && PartsPosition[number].x < PlatePosition.x + 512 &&
+			PlatePosition.y < PartsPosition[number].y + 128 && PartsPosition[number].y < PlatePosition.y + 512) {
 			if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
 				drawFlag[number] = 1;
 			}
@@ -176,7 +177,7 @@ void StageOne::Reset()
 {
 	score = 0;
 	alpha = 0;	
-	for (int i = 0; i < parts; i++) {
+	for (int i = 0; i < partsNumber; i++) {
 		catchFlag[i] = 0;
 		drawFlag[i] = 0;
 		scoreFlag[i] = 0;
