@@ -38,28 +38,15 @@ void StageOne::Update()
 	// 当たり判定
 	Collision();
 
+	// スコア加算
+	ScoreAddition();
+
 	// 結果発表
 	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
 		if (alpha < 255) {
 			alpha += 3;
 		}
 	}
-
-	if (380 < PartsPosition[0].x && PartsPosition[0].x < 580 &&
-		100 < PartsPosition[0].y && PartsPosition[0].y < 300 && scoreFlag[0] == 0 && drawFlag[0] == 1) {
-		score += 50;
-		scoreFlag[0] = 1;
-	}
-	if (572 < PartsPosition[1].x && PartsPosition[1].x < 772 &&
-		100 < PartsPosition[1].y && PartsPosition[1].y < 200 && scoreFlag[1] == 0 && drawFlag[1] == 1) {
-		score += 50;
-		scoreFlag[1] = 1;
-	}
-
-	// 次のシーンへのフラグをオンにする
-	if (alpha == 255) {
-		nextSceneFlag = 1;
-	}	
 }
 
 // 描画
@@ -105,28 +92,37 @@ void StageOne::Collision()
 	CollisionTemplate(1);
 }
 
+// スコア加算
+void StageOne::ScoreAddition()
+{
+	// 左目
+	ScoreAdditionTemplate(0);
+	// 右目
+	ScoreAdditionTemplate(1);
+}
+
 // 当たり判定のテンプレート
 void StageOne::CollisionTemplate(unsigned int number)
 {
-	// 左目の当たり判定
+	// 顔にパーツを置いていないとき、当たり判定が作動
 	if (drawFlag[number] == 0) {
 		// マウスをクリックしていないとき、パーツを離す
 		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
 			catchFlag[number] = 0;
 		}
-		// 左目のパーツの当たり判定
+		// パーツとマウスの当たり判定
 		if (PartsPosition[number].x < MousePosition.x && MousePosition.x < PartsPosition[number].x + 128 &&
 			PartsPosition[number].y < MousePosition.y && MousePosition.y < PartsPosition[number].y + 128) {
 			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && catchFlag[0] == 0 && catchFlag[1] == 0) {
 				catchFlag[number] = 1;
 			}
 		}
-		// 左目を掴んでいるとき、マウスに追尾する
+		// パーツを掴んでいるとき、マウスに追尾する
 		if (catchFlag[number] == 1) {
 			PartsPosition[number].x = MousePosition.x - 64;
 			PartsPosition[number].y = MousePosition.y - 64;
 		}
-		// 左目のパーツと顔の当たり判定
+		// 顔とパーツの当たり判定
 		if (FacePosition.x < PartsPosition[number].x + 128 && PartsPosition[number].x < FacePosition.x + 512 &&
 			FacePosition.y < PartsPosition[number].y + 128 && PartsPosition[number].y < FacePosition.y + 512) {
 			if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
@@ -136,11 +132,54 @@ void StageOne::CollisionTemplate(unsigned int number)
 	}
 }
 
+// スコア加算のテンプレート
+void StageOne::ScoreAdditionTemplate(unsigned int number)
+{
+	// 顔にパーツを置いたら、スコアを判定する
+	if (scoreFlag[number] == 0 && drawFlag[number] == 1) {
+		if (PerfectPartsPosition[number].x - judge[0] < PartsPosition[number].x &&
+			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[0] &&
+			PerfectPartsPosition[number].y - judge[0] < PartsPosition[number].y &&
+			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[0]) {
+			score += 50;
+		}
+		else if (PerfectPartsPosition[number].x - judge[1] < PartsPosition[number].x &&
+			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[1] &&
+			PerfectPartsPosition[number].y - judge[1] < PartsPosition[number].y &&
+			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[1]) {
+			score += 40;
+		}
+		else if (PerfectPartsPosition[number].x - judge[2] < PartsPosition[number].x &&
+			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[2] &&
+			PerfectPartsPosition[number].y - judge[2] < PartsPosition[number].y &&
+			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[2]) {
+			score += 30;
+		}
+		else if (PerfectPartsPosition[number].x - judge[3] < PartsPosition[number].x &&
+			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[3] &&
+			PerfectPartsPosition[number].y - judge[3] < PartsPosition[number].y &&
+			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[3]) {
+			score += 20;
+		}
+		else if (PerfectPartsPosition[number].x - judge[4] < PartsPosition[number].x &&
+			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[4] &&
+			PerfectPartsPosition[number].y - judge[4] < PartsPosition[number].y &&
+			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[4]) {
+			score += 10;
+		}
+		scoreFlag[number] = 1;
+	}
+}
+
 // リセット
 void StageOne::Reset()
 {
-	for (int i = 0; i < number; i++) {
+	score = 0;
+	alpha = 0;	
+	for (int i = 0; i < parts; i++) {
 		catchFlag[i] = 0;
+		drawFlag[i] = 0;
+		scoreFlag[i] = 0;
 	}
 	PartsPosition[0] = { 100,100 };
 	PartsPosition[1] = { 100,500 };
