@@ -37,68 +37,109 @@ void StageOne::Update()
 
 	// 当たり判定
 	Collision();
+
+	// 結果発表
+	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
+		if (alpha < 255) {
+			alpha += 3;
+		}
+	}
+
+	if (380 < PartsPosition[0].x && PartsPosition[0].x < 580 &&
+		100 < PartsPosition[0].y && PartsPosition[0].y < 300 && scoreFlag[0] == 0 && drawFlag[0] == 1) {
+		score += 50;
+		scoreFlag[0] = 1;
+	}
+	if (572 < PartsPosition[1].x && PartsPosition[1].x < 772 &&
+		100 < PartsPosition[1].y && PartsPosition[1].y < 200 && scoreFlag[1] == 0 && drawFlag[1] == 1) {
+		score += 50;
+		scoreFlag[1] = 1;
+	}
+
+	// 次のシーンへのフラグをオンにする
+	if (alpha == 255) {
+		nextSceneFlag = 1;
+	}	
 }
 
 // 描画
 void StageOne::Draw()
 {
 	// 顔
-	DrawGraph(384, 104, face, TRUE);
+	DrawGraph(FacePosition.x, FacePosition.y, face, TRUE);
 
 	// 目
-	DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
-	DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
+	if (drawFlag[0] == 0) {
+		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
+	}
+	if (drawFlag[1] == 0) {
+		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
+	}
+
+	// 結果発表
+	if (drawFlag[0] == 1 && drawFlag[1] == 1) {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawGraph(PartsPosition[0].x, PartsPosition[0].y, eye1, TRUE);
+		DrawGraph(PartsPosition[1].x, PartsPosition[1].y, eye2, TRUE);
+	}
 
 	// 手
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
 		DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand1, TRUE);
 	}
 	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) {
 		DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand2, TRUE);
 	}
+
+	// スコア
+	DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", score);
 }
 
 // 当たり判定
 void StageOne::Collision()
 {
-	// マウスをクリックしていないとき、掴みフラグをオフにする
-	for (int i = 0; i < 2; i++) {
+	// 左目
+	CollisionTemplate(0);
+	// 右目
+	CollisionTemplate(1);
+}
+
+// 当たり判定のテンプレート
+void StageOne::CollisionTemplate(unsigned int number)
+{
+	// 左目の当たり判定
+	if (drawFlag[number] == 0) {
+		// マウスをクリックしていないとき、パーツを離す
 		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
-			catchFlag[i] = 0;
+			catchFlag[number] = 0;
 		}
-	}
-
-	// 左目のパーツの当たり判定
-	if (PartsPosition[0].x < MousePosition.x && MousePosition.x < PartsPosition[0].x + 128 &&
-		PartsPosition[0].y < MousePosition.y && MousePosition.y < PartsPosition[0].y + 128) {
-		if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && catchFlag[0] == 0 && catchFlag[1] == 0) {
-			catchFlag[0] = 1;
+		// 左目のパーツの当たり判定
+		if (PartsPosition[number].x < MousePosition.x && MousePosition.x < PartsPosition[number].x + 128 &&
+			PartsPosition[number].y < MousePosition.y && MousePosition.y < PartsPosition[number].y + 128) {
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && catchFlag[0] == 0 && catchFlag[1] == 0) {
+				catchFlag[number] = 1;
+			}
 		}
-	}
-	// 右目のパーツの当たり判定
-	else if (PartsPosition[1].x < MousePosition.x && MousePosition.x < PartsPosition[1].x + 128 &&
-		PartsPosition[1].y < MousePosition.y && MousePosition.y < PartsPosition[1].y + 128) {
-		if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && catchFlag[0] == 0 && catchFlag[1] == 0) {
-			catchFlag[1] = 1;
+		// 左目を掴んでいるとき、マウスに追尾する
+		if (catchFlag[number] == 1) {
+			PartsPosition[number].x = MousePosition.x - 64;
+			PartsPosition[number].y = MousePosition.y - 64;
 		}
-	}
-
-	// 左目の掴みフラグがオンになったら、マウスに追尾する
-	if (catchFlag[0] == 1) {
-		PartsPosition[0].x = MousePosition.x - 64;
-		PartsPosition[0].y = MousePosition.y - 64;
-	}
-	// 右目の掴みフラグがオンになったら、マウスに追尾する
-	else if (catchFlag[1] == 1) {
-		PartsPosition[1].x = MousePosition.x - 64;
-		PartsPosition[1].y = MousePosition.y - 64;
+		// 左目のパーツと顔の当たり判定
+		if (FacePosition.x < PartsPosition[number].x + 128 && PartsPosition[number].x < FacePosition.x + 512 &&
+			FacePosition.y < PartsPosition[number].y + 128 && PartsPosition[number].y < FacePosition.y + 512) {
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
+				drawFlag[number] = 1;
+			}
+		}
 	}
 }
 
 // リセット
 void StageOne::Reset()
 {
-	for (int i = 0; i < 2; i++) {
+	for (int i = 0; i < number; i++) {
 		catchFlag[i] = 0;
 	}
 	PartsPosition[0] = { 100,100 };

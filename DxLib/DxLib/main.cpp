@@ -1,6 +1,6 @@
 #include "StageOne.h"
 
-const char TITLENAME[] = "HukuKun";
+const char TITLENAME[] = "福来たる";
 
 const int WIN_WIDTH = 1280; // ウィンドウ横幅
 const int WIN_HEIGHT = 720; // ウィンドウ縦幅
@@ -32,6 +32,12 @@ enum sceneName
 	TITLE,
 	SAMPLE1,
 	STAGE1,
+	SAMPLE2,
+	STAGE2,
+	SAMPLE3,
+	STAGE3,
+	SAMPLE4,
+	STAGE4,
 };
 
 //---------  ゲームループで使う変数ここまで  ---------//
@@ -88,12 +94,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (scene == STAGE1) {
 			stageOne->Update();
 		}
+		if (scene == SAMPLE2) {
+			// 処理
+		}
 
 		// シーン推移
 		SceneChange();
 
 		// 描画処理
-
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		if (scene == TITLE) {
 			DrawGraph(0, 0, title, TRUE);
 		}
@@ -104,6 +113,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (scene == STAGE1) {
 			DrawGraph(0, 0, background, TRUE);
 			stageOne->Draw();
+		}
+		if (scene == SAMPLE2) {
+			DrawGraph(0, 0, background, TRUE);
+			DrawGraph(384, 104, perfectFace, TRUE);
 		}
 
 		//---------  ここまでにプログラムを記述  ---------//
@@ -147,7 +160,10 @@ void SceneChange()
 		}
 	}
 	if (scene == 2) {
-		// 処理
+		if (GetMouseInputLog(&button, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+			(button & MOUSE_INPUT_LEFT) != 0 && stageOne->GetNextSceneFlag() == 1) {
+			scene = 3;
+		}
 	}
 }
 
