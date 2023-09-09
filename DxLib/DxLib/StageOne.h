@@ -38,6 +38,15 @@ public: // メンバ関数
 	// アルファ値の取得
 	unsigned int GetAlpha() { return alpha; }
 
+	// パーツの当たり判定をチェック
+	bool PartsCollisionCheck(unsigned int number, unsigned int number2);
+
+	// パーツ持っているかをチェック
+	bool CatchCheck();
+
+	// パーツが全て並べられたかをチェック
+	bool DrawCheck();
+
 private: // メンバ変数
 	const unsigned int judge[5] = { 7,14,21,28,35 };
 	const unsigned int partsNumber = 5;
@@ -53,6 +62,7 @@ private: // メンバ変数
 	XMINT2 PlatePosition = { 384,104 };
 
 	// 画像などのリソースデータの変数宣言
+	int ghost = 0;
 	int plate = 0;
 	int hand1 = 0;
 	int hand2 = 0;

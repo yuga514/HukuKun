@@ -20,10 +20,12 @@ void Reset();
 char keys[256] = { 0 }; // 最新のキーボード情報用
 char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
 
-int button = 0;
+int buttonLog = 0;
 unsigned int scene = 0;
 
+const XMINT2 ButtonPosition[3] = { { 100,606 }, { 512,606 }, { 924,606 } };
 XMINT2 ClickPosition = {};
+XMINT2 MousePosition = {};
 
 StageOne* stageOne = nullptr;
 
@@ -60,6 +62,13 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// 画像などのリソースデータの変数宣言と読み込み
+	int button[5] = {};
+	button[0] = LoadGraph("Resources/button/button4.png");
+	button[1] = LoadGraph("Resources/button/button5.png");
+	button[2] = LoadGraph("Resources/button/button.png");
+	button[3] = LoadGraph("Resources/button/button2.png");
+	button[4] = LoadGraph("Resources/button/button3.png");
+	int hand = LoadGraph("Resources/hand3.png");
 	int title = LoadGraph("Resources/test1.png");
 	int background = LoadGraph("Resources/test2.png");
 	int ghost = LoadGraph("Resources/ghost/ghost.png");
@@ -86,6 +95,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 		// 更新処理
 
+		// マウス非表示
+		SetMouseDispFlag(FALSE);
+
+		// マウスの位置を取得
+		GetMousePoint(&MousePosition.x, &MousePosition.y);
+
 		if (scene == TITLE) {
 			// 処理
 		}
@@ -106,10 +121,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		if (scene == TITLE) {
 			DrawGraph(0, 0, title, TRUE);
+			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[0], TRUE);
+			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 		}
 		if (scene == SAMPLE1) {
 			DrawGraph(0, 0, background, TRUE);
+			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[1], TRUE);
 			DrawGraph(384, 104, ghost, TRUE);
+			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 		}
 		if (scene == STAGE1) {
 			DrawGraph(0, 0, background, TRUE);
@@ -151,18 +170,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 void SceneChange()
 {
 	if (scene == 0) {
-		if (GetMouseInputLog(&button, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 && (button & MOUSE_INPUT_LEFT) != 0) {
+		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 &&
+			ButtonPosition[0].x < MousePosition.x && MousePosition.x < ButtonPosition[0].x + 256 &&
+			ButtonPosition[0].y < MousePosition.y && MousePosition.y < ButtonPosition[0].y + 64) {
 			scene = 1;
 		}
 	}
 	if (scene == 1) {
-		if (GetMouseInputLog(&button, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 && (button & MOUSE_INPUT_LEFT) != 0) {
+		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 &&
+			ButtonPosition[0].x < MousePosition.x && MousePosition.x < ButtonPosition[0].x + 256 &&
+			ButtonPosition[0].y < MousePosition.y && MousePosition.y < ButtonPosition[0].y + 64) {
 			scene = 2;
 		}
 	}
 	if (scene == 2) {
-		if (GetMouseInputLog(&button, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(button & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
+		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
 			if (50 <= stageOne->GetScore()) {
 				scene = 3;
 			}
