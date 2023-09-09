@@ -8,6 +8,7 @@ StageOne::StageOne()
 // デストラクタ
 StageOne::~StageOne()
 {
+	DeleteGraph(ghost);
 	DeleteGraph(plate);
 	DeleteGraph(hand1);
 	DeleteGraph(hand2);
@@ -20,6 +21,7 @@ StageOne::~StageOne()
 void StageOne::Initialize()
 {
 	// 画像などのリソースデータの読み込み
+	ghost = LoadGraph("Resources/ghost/ghost.png");
 	plate = LoadGraph("Resources/ghost/plate.png");
 	hand1 = LoadGraph("Resources/hand1.png");
 	hand2 = LoadGraph("Resources/hand2.png");
@@ -33,9 +35,6 @@ void StageOne::Initialize()
 // 更新
 void StageOne::Update()
 {
-	// マウス非表示
-	SetMouseDispFlag(FALSE);
-
 	// マウスの位置を取得
 	GetMousePoint(&MousePosition.x, &MousePosition.y);
 
@@ -47,10 +46,8 @@ void StageOne::Update()
 	}
 
 	// 結果発表
-	if (drawFlag[0] == 1 && drawFlag[1] == 1 && drawFlag[2] == 1 && drawFlag[3] == 1 && drawFlag[4] == 1) {
-		if (alpha < 255) {
-			alpha += 3;
-		}
+	if (DrawCheck() == true && alpha < 255) {
+		alpha += 3;
 	}
 }
 
@@ -62,18 +59,28 @@ void StageOne::Draw()
 
 	// パーツ
 	for (int i = 0; i < partsNumber; i++) {
-		if (drawFlag[i] == 0) {
+		if (drawFlag[i] == false) {
 			DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
 		}
 	}
 
 	// 結果発表
-	if (drawFlag[0] == 1 && drawFlag[1] == 1 && drawFlag[2] == 1 && drawFlag[3] == 1 && drawFlag[4] == 1) {
+	if (DrawCheck() == true && alpha < 255) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 		for (int i = 0; i < partsNumber; i++) {
-			if (drawFlag[i] == 1) {
+			DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
+		}
+	}
+
+	// 比較
+	if (alpha == 255) {
+		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) == 0) {
+			for (int i = 0; i < partsNumber; i++) {
 				DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
 			}
+		}
+		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
+			DrawGraph(PlatePosition.x, PlatePosition.y, ghost, TRUE);
 		}
 	}
 
@@ -94,20 +101,20 @@ void StageOne::Draw()
 void StageOne::Collision(unsigned int number)
 {
 	// 顔にパーツを置いていないとき、当たり判定が作動
-	if (drawFlag[number] == 0) {
+	if (drawFlag[number] == false) {
 		// マウスをクリックしていないとき、パーツを離す
 		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
-			catchFlag[number] = 0;
+			catchFlag[number] = false;
 		}
 		// パーツとマウスの当たり判定
 		if (PartsPosition[number].x < MousePosition.x && MousePosition.x < PartsPosition[number].x + 128 &&
 			PartsPosition[number].y < MousePosition.y && MousePosition.y < PartsPosition[number].y + 128) {
-			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && catchFlag[0] == 0 && catchFlag[1] == 0) {
-				catchFlag[number] = 1;
+			if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0 && CatchCheck() == false) {
+				catchFlag[number] = true;
 			}
 		}
 		// パーツを掴んでいるとき、マウスに追尾する
-		if (catchFlag[number] == 1) {
+		if (catchFlag[number] == true) {
 			PartsPosition[number].x = MousePosition.x - 64;
 			PartsPosition[number].y = MousePosition.y - 64;
 		}
@@ -115,7 +122,7 @@ void StageOne::Collision(unsigned int number)
 		if (PlatePosition.x < PartsPosition[number].x + 128 && PartsPosition[number].x < PlatePosition.x + 512 &&
 			PlatePosition.y < PartsPosition[number].y + 128 && PartsPosition[number].y < PlatePosition.y + 512) {
 			if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
-				drawFlag[number] = 1;
+				drawFlag[number] = true;
 			}
 		}
 	}
@@ -125,38 +132,52 @@ void StageOne::Collision(unsigned int number)
 void StageOne::ScoreAddition(unsigned int number)
 {
 	// 顔にパーツを置いたら、スコアを判定する
-	if (scoreFlag[number] == 0 && drawFlag[number] == 1) {
-		if (PerfectPartsPosition[number].x - judge[0] < PartsPosition[number].x &&
-			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[0] &&
-			PerfectPartsPosition[number].y - judge[0] < PartsPosition[number].y &&
-			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[0]) {
+	if (scoreFlag[number] == false && drawFlag[number] == true) {
+		if (PartsCollisionCheck(number, 0) == true) {
 			score += 20;
 		}
-		else if (PerfectPartsPosition[number].x - judge[1] < PartsPosition[number].x &&
-			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[1] &&
-			PerfectPartsPosition[number].y - judge[1] < PartsPosition[number].y &&
-			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[1]) {
+		else if (PartsCollisionCheck(number, 1) == true) {
 			score += 16;
 		}
-		else if (PerfectPartsPosition[number].x - judge[2] < PartsPosition[number].x &&
-			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[2] &&
-			PerfectPartsPosition[number].y - judge[2] < PartsPosition[number].y &&
-			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[2]) {
+		else if (PartsCollisionCheck(number, 2) == true) {
 			score += 12;
 		}
-		else if (PerfectPartsPosition[number].x - judge[3] < PartsPosition[number].x &&
-			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[3] &&
-			PerfectPartsPosition[number].y - judge[3] < PartsPosition[number].y &&
-			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[3]) {
+		else if (PartsCollisionCheck(number, 3) == true) {
 			score += 8;
 		}
-		else if (PerfectPartsPosition[number].x - judge[4] < PartsPosition[number].x &&
-			PartsPosition[number].x < PerfectPartsPosition[number].x + judge[4] &&
-			PerfectPartsPosition[number].y - judge[4] < PartsPosition[number].y &&
-			PartsPosition[number].y < PerfectPartsPosition[number].y + judge[4]) {
+		else if (PartsCollisionCheck(number, 4) == true) {
 			score += 4;
 		}
-		scoreFlag[number] = 1;
+		scoreFlag[number] = true;
+	}
+}
+
+// パーツの当たり判定をチェック
+bool StageOne::PartsCollisionCheck(unsigned int number, unsigned int number2)
+{
+	if (PerfectPartsPosition[number].x - judge[number2] < PartsPosition[number].x &&
+		PartsPosition[number].x < PerfectPartsPosition[number].x + judge[number2] &&
+		PerfectPartsPosition[number].y - judge[number2] < PartsPosition[number].y &&
+		PartsPosition[number].y < PerfectPartsPosition[number].y + judge[number2]) {
+		return true;
+	}
+}
+
+// パーツ持っているかをチェック
+bool StageOne::CatchCheck()
+{
+	if (catchFlag[0] == false && catchFlag[1] == false && catchFlag[2] == false &&
+		catchFlag[3] == false && catchFlag[4] == false) {
+		return false;
+	}
+}
+
+// パーツが全て並べられたかをチェック
+bool StageOne::DrawCheck()
+{
+	if (drawFlag[0] == true && drawFlag[1] == true && drawFlag[2] == true &&
+		drawFlag[3] == true && drawFlag[4] == true) {
+		return true;
 	}
 }
 
@@ -164,11 +185,11 @@ void StageOne::ScoreAddition(unsigned int number)
 void StageOne::Reset()
 {
 	score = 0;
-	alpha = 0;	
+	alpha = 0;
 	for (int i = 0; i < partsNumber; i++) {
-		catchFlag[i] = 0;
-		drawFlag[i] = 0;
-		scoreFlag[i] = 0;
+		catchFlag[i] = false;
+		drawFlag[i] = false;
+		scoreFlag[i] = false;
 	}
 	PartsPosition[0] = { 100,100 };
 	PartsPosition[1] = { 100,300 };
