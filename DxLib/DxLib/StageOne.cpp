@@ -51,6 +51,15 @@ void StageOne::Update()
 	if (DrawCheck() == true && alpha < 255) {
 		alpha += 3;
 	}
+
+#ifdef _DEBUG
+	// チート
+	if ((GetMouseInput() & MOUSE_INPUT_MIDDLE) != 0) {
+		for (int i = 0; i < partsNumber; i++) {
+			PartsPosition[i] = PerfectPartsPosition[i];
+		}
+	}
+#endif
 }
 
 // 描画
@@ -159,6 +168,7 @@ void StageOne::ScoreAddition(unsigned int number)
 // パーツ紛失
 void StageOne::PartsLost(unsigned int number)
 {
+	// パーツが画面外に出たら、初期位置に戻す
 	if (PartsPosition[number].x < -64 || 1216 < PartsPosition[number].x ||
 		PartsPosition[number].y < -64 || 656 < PartsPosition[number].y) {
 		PartsPosition[number] = DefaultPartsPosition[number];

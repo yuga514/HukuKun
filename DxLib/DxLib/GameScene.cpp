@@ -1,9 +1,11 @@
 ﻿#include "GameScene.h"
 
+// コンストラクタ
 GameScene::GameScene()
 {
 }
 
+// デストラクタ
 GameScene::~GameScene()
 {
 	for (int i = 0; i < 5; i++) {
@@ -17,6 +19,7 @@ GameScene::~GameScene()
 	stageOne->~StageOne();
 }
 
+// 初期化
 void GameScene::Initialize()
 {
 	// 画像などのリソースデータの読み込み
@@ -36,6 +39,7 @@ void GameScene::Initialize()
 	stageOne->Initialize();
 }
 
+// 更新
 void GameScene::Update()
 {
 	// マウス非表示
@@ -61,14 +65,17 @@ void GameScene::Update()
 	SceneChange();
 }
 
+// 描画
 void GameScene::Draw()
 {
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	// タイトル
 	if (scene == TITLE) {
 		DrawGraph(0, 0, title, TRUE);
 		DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[0], TRUE);
 		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 	}
+	// サンプル1
 	if (scene == SAMPLE1) {
 		DrawGraph(0, 0, background, TRUE);
 		DrawGraph(384, 104, ghost, TRUE);
@@ -77,6 +84,7 @@ void GameScene::Draw()
 		// スコア50以上でクリア
 		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア50以上でクリア");
 	}
+	// ステージ1
 	if (scene == STAGE1) {
 		DrawGraph(0, 0, background, TRUE);
 		stageOne->Draw();
@@ -89,6 +97,7 @@ void GameScene::Draw()
 			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 		}
 	}
+	// サンプル2
 	if (scene == SAMPLE2) {
 		DrawGraph(0, 0, background, TRUE);
 		DrawGraph(384, 104, okame, TRUE);
@@ -98,18 +107,21 @@ void GameScene::Draw()
 // シーン推移
 void GameScene::SceneChange()
 {
+	// タイトル
 	if (scene == TITLE) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(0) == true) {
 			scene = SAMPLE1;
 		}
 	}
+	// サンプル1
 	if (scene == SAMPLE1) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(1) == true) {
 			scene = STAGE1;
 		}
 	}
+	// ステージ1
 	if (scene == STAGE1) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {

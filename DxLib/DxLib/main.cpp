@@ -23,7 +23,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//（ダブルバッファ）描画先グラフィック領域は裏面を指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 画像などのリソースデータの変数宣言と読み込みなんてものはいらねぇよ
+	// 画像などのリソースデータの変数宣言と読み込み
 
 
 	// ゲームシーン生成
