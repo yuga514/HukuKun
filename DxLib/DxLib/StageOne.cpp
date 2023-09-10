@@ -66,6 +66,16 @@ void StageOne::Draw()
 		}
 	}
 
+	// 手
+	if (alpha == 0) {
+		if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
+			DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand1, TRUE);
+		}
+		if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) {
+			DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand2, TRUE);
+		}
+	}
+
 	// 結果発表
 	if (DrawCheck() == true && alpha < 255) {
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
@@ -84,21 +94,11 @@ void StageOne::Draw()
 		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
 			DrawGraph(PlatePosition.x, PlatePosition.y, ghost, TRUE);
 		}
+		// スコア
+		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", score);
 		// 右クリックで元の絵と比較
 		DrawFormatString(0, 20, GetColor(0, 0, 0), "右クリックで元の絵と比較");
 	}
-
-	// 手
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	if ((GetMouseInput() & MOUSE_INPUT_LEFT) == 0) {
-		DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand1, TRUE);
-	}
-	if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) {
-		DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand2, TRUE);
-	}
-
-	// スコア
-	DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", score);
 }
 
 // 当たり判定

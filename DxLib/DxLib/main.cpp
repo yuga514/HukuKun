@@ -7,6 +7,12 @@ const int WIN_HEIGHT = 720; // ウィンドウ縦幅
 
 //---------  ゲームループで使う関数ここから  ---------//
 
+// ロード
+void Load();
+
+// デリート
+void Delete();
+
 // シーン推移
 void SceneChange();
 
@@ -45,6 +51,14 @@ enum sceneName
 	STAGE4,
 };
 
+// 画像などのリソースデータの変数宣言
+int button[5] = {};
+int hand = 0;
+int title = 0;
+int background = 0;
+int ghost = 0;
+int okame = 0;
+
 //---------  ゲームループで使う変数ここまで  ---------//
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
@@ -64,18 +78,17 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//（ダブルバッファ）描画先グラフィック領域は裏面を指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 画像などのリソースデータの変数宣言と読み込み
-	int button[5] = {};
+	// 画像などのリソースデータの読み込み
 	button[0] = LoadGraph("Resources/button/button4.png");
 	button[1] = LoadGraph("Resources/button/button5.png");
 	button[2] = LoadGraph("Resources/button/button.png");
 	button[3] = LoadGraph("Resources/button/button2.png");
 	button[4] = LoadGraph("Resources/button/button3.png");
-	int hand = LoadGraph("Resources/hand3.png");
-	int title = LoadGraph("Resources/title.png");
-	int background = LoadGraph("Resources/test2.png");
-	int ghost = LoadGraph("Resources/ghost/ghost.png");
-	int okame = LoadGraph("Resources/okame/okame.png");
+	hand = LoadGraph("Resources/hand3.png");
+	title = LoadGraph("Resources/title.png");
+	background = LoadGraph("Resources/test2.png");
+	ghost = LoadGraph("Resources/ghost/ghost.png");
+	okame = LoadGraph("Resources/okame/okame.png");
 
 	// ステージ1生成
 	stageOne = new StageOne();
@@ -138,6 +151,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		if (scene == STAGE1) {
 			DrawGraph(0, 0, background, TRUE);
 			stageOne->Draw();
+			if (stageOne->GetAlpha() == 255) {
+				if (50 < stageOne->GetScore()) {
+					DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
+				}
+				DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
+				DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[4], TRUE);
+				DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
+			}
 		}
 		if (scene == SAMPLE2) {
 			DrawGraph(0, 0, background, TRUE);
@@ -160,9 +181,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 	}
 	// デストラクタ
-	DeleteGraph(title);
-	DeleteGraph(background);
-	DeleteGraph(ghost);
+	Delete();
 	stageOne->~StageOne();
 
 	// Dxライブラリ終了処理
@@ -171,32 +190,49 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	return 0;
 }
 
+// デリート
+void Delete()
+{
+	for (int i = 0; i < 5; i++) {
+		DeleteGraph(button[i]);
+	}
+	DeleteGraph(hand);
+	DeleteGraph(title);
+	DeleteGraph(background);
+	DeleteGraph(ghost);
+	DeleteGraph(okame);
+}
+
 // シーン推移
 void SceneChange()
 {
-	if (scene == 0) {
+	if (scene == TITLE) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(0) == true) {
-			scene = 1;
+			scene = SAMPLE1;
 		}
 	}
-	if (scene == 1) {
+	if (scene == SAMPLE1) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(1) == true) {
-			scene = 2;
+			scene = STAGE1;
 		}
 	}
-	if (scene == 2) {
-		/*if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+	if (scene == STAGE1) {
+		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
-			if (50 <= stageOne->GetScore()) {
-				scene = 3;
+			if (ButtonCollision(1) && 50 <= stageOne->GetScore()) {
+				scene = SAMPLE2;
 			}
-			if (stageOne->GetScore() < 50) {
-				scene = 0;
+			if (ButtonCollision(2)) {
+				scene = TITLE;
 				Reset();
 			}
-		}*/
+			if (ButtonCollision(3)) {
+				scene = SAMPLE1;
+				Reset();
+			}
+		}
 	}
 }
 
