@@ -26,7 +26,7 @@ char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
 int buttonLog = 0;
 unsigned int scene = 0;
 
-const XMINT2 ButtonPosition[5] = { { 512,360 }, { -15000,-15000 }, { 100,606 }, { 512,606 }, { 924,606 } };
+const XMINT2 ButtonPosition[4] = { { 512,360 }, { 512,606 }, { 100,606 }, { 924,606 } };
 XMINT2 ClickPosition = {};
 XMINT2 MousePosition = {};
 
@@ -129,9 +129,11 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (scene == SAMPLE1) {
 			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
 			DrawGraph(384, 104, ghost, TRUE);
+			DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
 			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
+			// スコア50以上でクリア
+			DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア50以上でクリア");
 		}
 		if (scene == STAGE1) {
 			DrawGraph(0, 0, background, TRUE);
@@ -180,12 +182,12 @@ void SceneChange()
 	}
 	if (scene == 1) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(2) == true) {
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(1) == true) {
 			scene = 2;
 		}
 	}
 	if (scene == 2) {
-		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
+		/*if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
 			(buttonLog & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
 			if (50 <= stageOne->GetScore()) {
 				scene = 3;
@@ -194,7 +196,7 @@ void SceneChange()
 				scene = 0;
 				Reset();
 			}
-		}
+		}*/
 	}
 }
 
@@ -210,5 +212,8 @@ bool ButtonCollision(unsigned int number)
 	if (ButtonPosition[number].x < MousePosition.x && MousePosition.x < ButtonPosition[number].x + 256 &&
 		ButtonPosition[number].y < MousePosition.y && MousePosition.y < ButtonPosition[number].y + 64) {
 		return true;
+	}
+	else {
+		return false;
 	}
 }
