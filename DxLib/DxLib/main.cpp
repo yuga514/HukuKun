@@ -1,65 +1,10 @@
-#include "StageOne.h"
+#include "GameScene.h"
 
-const char TITLENAME[] = "福来たる";
+const char TITLE[] = "福来たる";
 
 const int WIN_WIDTH = 1280; // ウィンドウ横幅
 const int WIN_HEIGHT = 720; // ウィンドウ縦幅
 
-//---------  ゲームループで使う関数ここから  ---------//
-
-// ロード
-void Load();
-
-// デリート
-void Delete();
-
-// シーン推移
-void SceneChange();
-
-// リセット
-void Reset();
-
-// ボタンの当たり判定
-bool ButtonCollision(unsigned int number);
-
-//---------  ゲームループで使う関数ここまで  ---------//
-
-//---------  ゲームループで使う変数ここから  ---------//
-
-char keys[256] = { 0 }; // 最新のキーボード情報用
-char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
-
-int buttonLog = 0;
-unsigned int scene = 0;
-
-const XMINT2 ButtonPosition[4] = { { 512,360 }, { 512,606 }, { 100,606 }, { 924,606 } };
-XMINT2 ClickPosition = {};
-XMINT2 MousePosition = {};
-
-StageOne* stageOne = nullptr;
-
-enum sceneName
-{
-	TITLE,
-	SAMPLE1,
-	STAGE1,
-	SAMPLE2,
-	STAGE2,
-	SAMPLE3,
-	STAGE3,
-	SAMPLE4,
-	STAGE4,
-};
-
-// 画像などのリソースデータの変数宣言
-int button[5] = {};
-int hand = 0;
-int title = 0;
-int background = 0;
-int ghost = 0;
-int okame = 0;
-
-//---------  ゲームループで使う変数ここまで  ---------//
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -67,7 +12,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	ChangeWindowMode(TRUE); // ウィンドウモードに設定
 	// ウィンドウサイズを手動では変更できず、かつウィンドウサイズに合わせて拡大できないようにする
 	SetWindowSizeChangeEnableFlag(FALSE, FALSE);
-	SetMainWindowText(TITLENAME); // タイトルを変更
+	SetMainWindowText(TITLE); // タイトルを変更
 	SetGraphMode(WIN_WIDTH, WIN_HEIGHT, 32); // 画面サイズの最大サイズ、カラービット数を設定（モニターの解像度に合わせる）
 	SetWindowSizeExtendRate(1.0); // 画面サイズを設定（解像度との比率で設定）
 	SetBackgroundColor(0x00, 0x00, 0x00); // 画面の背景色を設定する
@@ -78,21 +23,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//（ダブルバッファ）描画先グラフィック領域は裏面を指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 画像などのリソースデータの読み込み
-	button[0] = LoadGraph("Resources/button/button4.png");
-	button[1] = LoadGraph("Resources/button/button5.png");
-	button[2] = LoadGraph("Resources/button/button.png");
-	button[3] = LoadGraph("Resources/button/button2.png");
-	button[4] = LoadGraph("Resources/button/button3.png");
-	hand = LoadGraph("Resources/hand3.png");
-	title = LoadGraph("Resources/title.png");
-	background = LoadGraph("Resources/test2.png");
-	ghost = LoadGraph("Resources/ghost/ghost.png");
-	okame = LoadGraph("Resources/okame/okame.png");
+	// 画像などのリソースデータの変数宣言と読み込みなんてものはいらねぇよ
 
-	// ステージ1生成
-	stageOne = new StageOne();
-	stageOne->Initialize();
+
+	// ゲームシーン生成
+	GameScene* gameScene = new GameScene();
+	gameScene->Initialize();
+
+	// ゲームループで使う変数の宣言
+	char keys[256] = { 0 }; // 最新のキーボード情報用
+	char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
 
 	// ゲームループ
 	while (1)
@@ -110,60 +50,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		//---------  ここからプログラムを記述  ---------//
 
 		// 更新処理
-
-		// マウス非表示
-		SetMouseDispFlag(FALSE);
-
-		// マウスの位置を取得
-		GetMousePoint(&MousePosition.x, &MousePosition.y);
-
-		if (scene == TITLE) {
-			// 処理
-		}
-		if (scene == SAMPLE1) {
-			// 処理
-		}
-		if (scene == STAGE1) {
-			stageOne->Update();
-		}
-		if (scene == SAMPLE2) {
-			// 処理
-		}
-
-		// シーン推移
-		SceneChange();
+		gameScene->Update();
 
 		// 描画処理
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-		if (scene == TITLE) {
-			DrawGraph(0, 0, title, TRUE);
-			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[0], TRUE);
-			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
-		}
-		if (scene == SAMPLE1) {
-			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(384, 104, ghost, TRUE);
-			DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
-			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
-			// スコア50以上でクリア
-			DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア50以上でクリア");
-		}
-		if (scene == STAGE1) {
-			DrawGraph(0, 0, background, TRUE);
-			stageOne->Draw();
-			if (stageOne->GetAlpha() == 255) {
-				if (50 < stageOne->GetScore()) {
-					DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
-				}
-				DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
-				DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[4], TRUE);
-				DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
-			}
-		}
-		if (scene == SAMPLE2) {
-			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(384, 104, okame, TRUE);
-		}
+		gameScene->Draw();
 
 		//---------  ここまでにプログラムを記述  ---------//
 		ScreenFlip(); //（ダブルバッファ）裏面
@@ -181,75 +71,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 	}
 	// デストラクタ
-	Delete();
-	stageOne->~StageOne();
+	gameScene->~GameScene();
 
 	// Dxライブラリ終了処理
 	DxLib_End();
 
 	return 0;
-}
-
-// デリート
-void Delete()
-{
-	for (int i = 0; i < 5; i++) {
-		DeleteGraph(button[i]);
-	}
-	DeleteGraph(hand);
-	DeleteGraph(title);
-	DeleteGraph(background);
-	DeleteGraph(ghost);
-	DeleteGraph(okame);
-}
-
-// シーン推移
-void SceneChange()
-{
-	if (scene == TITLE) {
-		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(0) == true) {
-			scene = SAMPLE1;
-		}
-	}
-	if (scene == SAMPLE1) {
-		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(1) == true) {
-			scene = STAGE1;
-		}
-	}
-	if (scene == STAGE1) {
-		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 && stageOne->GetAlpha() == 255) {
-			if (ButtonCollision(1) && 50 <= stageOne->GetScore()) {
-				scene = SAMPLE2;
-			}
-			if (ButtonCollision(2)) {
-				scene = TITLE;
-				Reset();
-			}
-			if (ButtonCollision(3)) {
-				scene = SAMPLE1;
-				Reset();
-			}
-		}
-	}
-}
-
-// リセット
-void Reset()
-{
-	stageOne->Reset();
-}
-
-// ボタンの当たり判定
-bool ButtonCollision(unsigned int number)
-{
-	if (ButtonPosition[number].x < MousePosition.x && MousePosition.x < ButtonPosition[number].x + 256 &&
-		ButtonPosition[number].y < MousePosition.y && MousePosition.y < ButtonPosition[number].y + 64) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
