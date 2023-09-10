@@ -13,6 +13,9 @@ void SceneChange();
 // リセット
 void Reset();
 
+// ボタンの当たり判定
+bool ButtonCollision(unsigned int number);
+
 //---------  ゲームループで使う関数ここまで  ---------//
 
 //---------  ゲームループで使う変数ここから  ---------//
@@ -23,7 +26,7 @@ char oldkeys[256] = { 0 }; // 1ループ（フレーム）前のキーボード情報
 int buttonLog = 0;
 unsigned int scene = 0;
 
-const XMINT2 ButtonPosition[3] = { { 100,606 }, { 512,606 }, { 924,606 } };
+const XMINT2 ButtonPosition[5] = { { 512,360 }, { -15000,-15000 }, { 100,606 }, { 512,606 }, { 924,606 } };
 XMINT2 ClickPosition = {};
 XMINT2 MousePosition = {};
 
@@ -69,7 +72,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	button[3] = LoadGraph("Resources/button/button2.png");
 	button[4] = LoadGraph("Resources/button/button3.png");
 	int hand = LoadGraph("Resources/hand3.png");
-	int title = LoadGraph("Resources/test1.png");
+	int title = LoadGraph("Resources/title.png");
 	int background = LoadGraph("Resources/test2.png");
 	int ghost = LoadGraph("Resources/ghost/ghost.png");
 	int okame = LoadGraph("Resources/okame/okame.png");
@@ -126,7 +129,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		}
 		if (scene == SAMPLE1) {
 			DrawGraph(0, 0, background, TRUE);
-			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[1], TRUE);
+			DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
 			DrawGraph(384, 104, ghost, TRUE);
 			DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 		}
@@ -171,17 +174,13 @@ void SceneChange()
 {
 	if (scene == 0) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 &&
-			ButtonPosition[0].x < MousePosition.x && MousePosition.x < ButtonPosition[0].x + 256 &&
-			ButtonPosition[0].y < MousePosition.y && MousePosition.y < ButtonPosition[0].y + 64) {
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(0) == true) {
 			scene = 1;
 		}
 	}
 	if (scene == 1) {
 		if (GetMouseInputLog(&buttonLog, &ClickPosition.x, &ClickPosition.y, TRUE) == 0 &&
-			(buttonLog & MOUSE_INPUT_LEFT) != 0 &&
-			ButtonPosition[0].x < MousePosition.x && MousePosition.x < ButtonPosition[0].x + 256 &&
-			ButtonPosition[0].y < MousePosition.y && MousePosition.y < ButtonPosition[0].y + 64) {
+			(buttonLog & MOUSE_INPUT_LEFT) != 0 && ButtonCollision(2) == true) {
 			scene = 2;
 		}
 	}
@@ -203,4 +202,13 @@ void SceneChange()
 void Reset()
 {
 	stageOne->Reset();
+}
+
+// ボタンの当たり判定
+bool ButtonCollision(unsigned int number)
+{
+	if (ButtonPosition[number].x < MousePosition.x && MousePosition.x < ButtonPosition[number].x + 256 &&
+		ButtonPosition[number].y < MousePosition.y && MousePosition.y < ButtonPosition[number].y + 64) {
+		return true;
+	}
 }
