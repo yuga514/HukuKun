@@ -8,9 +8,9 @@ StageTwo::StageTwo()
 // デストラクタ
 StageTwo::~StageTwo()
 {
-	DeleteGraph(plate);
 	DeleteGraph(hand1);
 	DeleteGraph(hand2);
+	DeleteGraph(plate);
 	for (int i = 0; i < partsNumber; i++) {
 		DeleteGraph(parts[i]);
 	}
@@ -20,9 +20,9 @@ StageTwo::~StageTwo()
 void StageTwo::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	plate = LoadGraph("Resources/okame/plate.png");
 	hand1 = LoadGraph("Resources/hand1.png");
 	hand2 = LoadGraph("Resources/hand2.png");
+	plate = LoadGraph("Resources/okame/plate.png");
 	parts[0] = LoadGraph("Resources/okame/LeftEye.png");
 	parts[1] = LoadGraph("Resources/okame/RightEye.png");
 	parts[2] = LoadGraph("Resources/okame/mouth.png");
