@@ -16,6 +16,9 @@ GameScene::~GameScene()
 	DeleteGraph(background);
 	DeleteGraph(ghost);
 	DeleteGraph(okame);
+	DeleteGraph(hyottoko);
+	DeleteGraph(franken);
+	DeleteGraph(clear);
 	stageOne->~StageOne();
 	stageTwo->~StageTwo();
 	stageThree->~StageThree();
@@ -32,11 +35,12 @@ void GameScene::Initialize()
 	button[4] = LoadGraph("Resources/button/button3.png");
 	hand = LoadGraph("Resources/hand3.png");
 	title = LoadGraph("Resources/title.png");
-	background = LoadGraph("Resources/test2.png");
+	background = LoadGraph("Resources/background.png");
 	ghost = LoadGraph("Resources/ghost/ghost.png");
 	okame = LoadGraph("Resources/okame/okame.png");
 	hyottoko = LoadGraph("Resources/hyottoko/hyottoko.png");
 	franken = LoadGraph("Resources/franken/franken.png");
+	clear = LoadGraph("Resources/test.png");
 
 	// ステージ1生成
 	stageOne = new StageOne();
@@ -47,6 +51,9 @@ void GameScene::Initialize()
 	// ステージ3生成
 	stageThree = new StageThree();
 	stageThree->Initialize();
+	// ステージ4生成
+	stageFour = new StageFour();
+	stageFour->Initialize();
 }
 
 // 更新
@@ -133,6 +140,36 @@ void GameScene::Update()
 		}
 		stageThree->Update();
 	}
+	// サンプル4
+	if (scene == SAMPLE4) {
+		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+			scene = STAGE4;
+		}
+	}
+	// ステージ4
+	if (scene == STAGE4) {
+		if (ButtonCheck() == true && stageFour->GetAlpha() == 255) {
+			if (ButtonCollision(1) && 80 <= stageFour->GetScore()) {
+				scene = CLEAR;
+			}
+			if (ButtonCollision(2)) {
+				scene = TITLE;
+				Reset();
+			}
+			if (ButtonCollision(3)) {
+				scene = SAMPLE4;
+				stageFour->Reset();
+			}
+		}
+		stageFour->Update();
+	}
+	// クリア
+	if (scene == CLEAR) {
+		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+			scene = TITLE;
+			Reset();
+		}
+	}
 }
 
 // 描画
@@ -161,7 +198,7 @@ void GameScene::Draw()
 			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
 				DrawGraph(384, 104, ghost, TRUE);
 			}
-			if (50 < stageOne->GetScore()) {
+			if (50 <= stageOne->GetScore()) {
 				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
 			}
 			StageDraw();
@@ -183,7 +220,7 @@ void GameScene::Draw()
 			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
 				DrawGraph(384, 104, okame, TRUE);
 			}
-			if (60 < stageTwo->GetScore()) {
+			if (60 <= stageTwo->GetScore()) {
 				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
 			}
 			StageDraw();
@@ -205,12 +242,47 @@ void GameScene::Draw()
 			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
 				DrawGraph(384, 104, hyottoko, TRUE);
 			}
-			if (70 < stageThree->GetScore()) {
+			if (70 <= stageThree->GetScore()) {
 				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
 			}
 			StageDraw();
 		}
 	}
+	// サンプル4
+	if (scene == SAMPLE4) {
+		DrawGraph(0, 0, background, TRUE);
+		DrawGraph(384, 104, franken, TRUE);
+		SampleDraw();
+		// スコア80以上でクリア
+		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア80以上でクリア");
+	}
+	// ステージ4
+	if (scene == STAGE4) {
+		DrawGraph(0, 0, background, TRUE);
+		stageFour->Draw();
+		if (stageFour->GetAlpha() == 255) {
+			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
+				DrawGraph(384, 104, franken, TRUE);
+			}
+			if (80 <= stageFour->GetScore()) {
+				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
+			}
+			StageDraw();
+		}
+	}
+	// クリア
+	if (scene == CLEAR) {
+		DrawGraph(0, 0, clear, TRUE);
+		DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[2], TRUE);
+		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
+	}
+}
+
+// サンプル表示の時に共通して描画するもの
+void GameScene::SampleDraw()
+{
+	DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
+	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
 // ステージ終了の時に共通して描画するもの
@@ -221,19 +293,13 @@ void GameScene::StageDraw()
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
-// サンプル表示の時に共通して描画するもの
-void GameScene::SampleDraw()
-{
-	DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
-	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
-}
-
 // リセット
 void GameScene::Reset()
 {
 	stageOne->Reset();
 	stageTwo->Reset();
 	stageThree->Reset();
+	stageFour->Reset();
 }
 
 // ボタンを押したかをチェック

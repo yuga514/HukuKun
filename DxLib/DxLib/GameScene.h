@@ -3,6 +3,7 @@
 #include "StageOne.h"
 #include "StageTwo.h"
 #include "StageThree.h"
+#include "StageFour.h"
 
 // ゲームシーン
 class GameScene
@@ -49,6 +50,7 @@ private: // メンバ変数
 	StageOne* stageOne = nullptr;
 	StageTwo* stageTwo = nullptr;
 	StageThree* stageThree = nullptr;
+	StageFour* stageFour = nullptr;
 
 	enum sceneName
 	{
@@ -61,6 +63,7 @@ private: // メンバ変数
 		STAGE3,
 		SAMPLE4,
 		STAGE4,
+		CLEAR
 	};
 
 	int fontHandle = CreateFontToHandle("HG行書体", 64, 8);
@@ -74,4 +77,5 @@ private: // メンバ変数
 	int okame = 0;
 	int hyottoko = 0;
 	int franken = 0;
+	int clear = 0;
 };
