@@ -154,11 +154,13 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StageOne.cpp" />
+    <ClCompile Include="StageThree.cpp" />
     <ClCompile Include="StageTwo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="StageOne.h" />
+    <ClInclude Include="StageThree.h" />
     <ClInclude Include="StageTwo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

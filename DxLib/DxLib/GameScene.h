@@ -2,6 +2,7 @@
 
 #include "StageOne.h"
 #include "StageTwo.h"
+#include "StageThree.h"
 
 // ゲームシーン
 class GameScene
@@ -47,6 +48,7 @@ private: // メンバ変数
 
 	StageOne* stageOne = nullptr;
 	StageTwo* stageTwo = nullptr;
+	StageThree* stageThree = nullptr;
 
 	enum sceneName
 	{

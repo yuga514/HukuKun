@@ -18,6 +18,7 @@ GameScene::~GameScene()
 	DeleteGraph(okame);
 	stageOne->~StageOne();
 	stageTwo->~StageTwo();
+	stageThree->~StageThree();
 }
 
 // 初期化
@@ -43,6 +44,9 @@ void GameScene::Initialize()
 	// ステージ2生成
 	stageTwo = new StageTwo();
 	stageTwo->Initialize();
+	// ステージ3生成
+	stageThree = new StageThree();
+	stageThree->Initialize();
 }
 
 // 更新
@@ -106,6 +110,29 @@ void GameScene::Update()
 		}
 		stageTwo->Update();
 	}
+	// サンプル3
+	if (scene == SAMPLE3) {
+		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+			scene = STAGE3;
+		}
+	}
+	// ステージ3
+	if (scene == STAGE3) {
+		if (ButtonCheck() == true && stageThree->GetAlpha() == 255) {
+			if (ButtonCollision(1) && 70 <= stageThree->GetScore()) {
+				scene = SAMPLE4;
+			}
+			if (ButtonCollision(2)) {
+				scene = TITLE;
+				Reset();
+			}
+			if (ButtonCollision(3)) {
+				scene = SAMPLE3;
+				stageThree->Reset();
+			}
+		}
+		stageThree->Update();
+	}
 }
 
 // 描画
@@ -162,6 +189,28 @@ void GameScene::Draw()
 			StageDraw();
 		}
 	}
+	// サンプル3
+	if (scene == SAMPLE3) {
+		DrawGraph(0, 0, background, TRUE);
+		DrawGraph(384, 104, hyottoko, TRUE);
+		SampleDraw();
+		// スコア70以上でクリア
+		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア70以上でクリア");
+	}
+	// ステージ3
+	if (scene == STAGE3) {
+		DrawGraph(0, 0, background, TRUE);
+		stageThree->Draw();
+		if (stageThree->GetAlpha() == 255) {
+			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
+				DrawGraph(384, 104, hyottoko, TRUE);
+			}
+			if (70 < stageThree->GetScore()) {
+				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
+			}
+			StageDraw();
+		}
+	}
 }
 
 // ステージ終了の時に共通して描画するもの
@@ -184,6 +233,7 @@ void GameScene::Reset()
 {
 	stageOne->Reset();
 	stageTwo->Reset();
+	stageThree->Reset();
 }
 
 // ボタンを押したかをチェック

@@ -8,9 +8,9 @@ StageOne::StageOne()
 // デストラクタ
 StageOne::~StageOne()
 {
-	DeleteGraph(plate);
 	DeleteGraph(hand1);
 	DeleteGraph(hand2);
+	DeleteGraph(plate);
 	for (int i = 0; i < partsNumber; i++) {
 		DeleteGraph(parts[i]);
 	}
@@ -20,9 +20,9 @@ StageOne::~StageOne()
 void StageOne::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	plate = LoadGraph("Resources/ghost/plate.png");
 	hand1 = LoadGraph("Resources/hand1.png");
 	hand2 = LoadGraph("Resources/hand2.png");
+	plate = LoadGraph("Resources/ghost/plate.png");
 	parts[0] = LoadGraph("Resources/ghost/LeftEye.png");
 	parts[1] = LoadGraph("Resources/ghost/RightEye.png");
 	parts[2] = LoadGraph("Resources/ghost/mouth.png");
