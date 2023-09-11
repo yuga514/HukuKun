@@ -66,7 +66,6 @@ private: // メンバ変数
 	XMINT2 PlatePosition = { 384,104 };
 
 	// 画像などのリソースデータの変数宣言
-	int ghost = 0;
 	int plate = 0;
 	int hand1 = 0;
 	int hand2 = 0;

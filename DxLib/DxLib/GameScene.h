@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "StageOne.h"
+#include "StageTwo.h"
 
 // ゲームシーン
 class GameScene
@@ -21,11 +22,17 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
-	// シーン推移
-	void SceneChange();
+	// サンプル表示の時に共通して描画するもの
+	void SampleDraw();
+
+	// ステージ終了の時に共通して描画するもの
+	void StageDraw();
 
 	// リセット
 	void Reset();
+
+	// ボタンを押したかをチェック
+	bool ButtonCheck();
 
 	// ボタンの当たり判定
 	bool ButtonCollision(unsigned int number);
@@ -39,6 +46,7 @@ private: // メンバ変数
 	XMINT2 MousePosition = {};
 
 	StageOne* stageOne = nullptr;
+	StageTwo* stageTwo = nullptr;
 
 	enum sceneName
 	{
@@ -53,6 +61,8 @@ private: // メンバ変数
 		STAGE4,
 	};
 
+	int fontHandle = CreateFontToHandle("HG行書体", 64, 8);
+
 	// 画像などのリソースデータの変数宣言
 	int button[5] = {};
 	int hand = 0;
@@ -60,4 +70,6 @@ private: // メンバ変数
 	int background = 0;
 	int ghost = 0;
 	int okame = 0;
+	int hyottoko = 0;
+	int franken = 0;
 };
