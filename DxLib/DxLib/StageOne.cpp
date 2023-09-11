@@ -8,7 +8,6 @@ StageOne::StageOne()
 // デストラクタ
 StageOne::~StageOne()
 {
-	DeleteGraph(ghost);
 	DeleteGraph(plate);
 	DeleteGraph(hand1);
 	DeleteGraph(hand2);
@@ -21,7 +20,6 @@ StageOne::~StageOne()
 void StageOne::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	ghost = LoadGraph("Resources/ghost/ghost.png");
 	plate = LoadGraph("Resources/ghost/plate.png");
 	hand1 = LoadGraph("Resources/hand1.png");
 	hand2 = LoadGraph("Resources/hand2.png");
@@ -68,9 +66,15 @@ void StageOne::Draw()
 	// プレート
 	DrawGraph(PlatePosition.x, PlatePosition.y, plate, TRUE);
 
+	// アルファブレンド
+	if (DrawCheck() == true) {
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	}
+
 	// パーツ
 	for (int i = 0; i < partsNumber; i++) {
-		if (drawFlag[i] == false) {
+		if (drawFlag[i] == false || DrawCheck() == true && alpha < 255 ||
+			alpha == 255 && (GetMouseInput() & MOUSE_INPUT_RIGHT) == 0) {
 			DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
 		}
 	}
@@ -85,24 +89,8 @@ void StageOne::Draw()
 		}
 	}
 
-	// 結果発表
-	if (DrawCheck() == true && alpha < 255) {
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-		for (int i = 0; i < partsNumber; i++) {
-			DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
-		}
-	}
-
-	// 比較
+	// スコア
 	if (alpha == 255) {
-		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) == 0) {
-			for (int i = 0; i < partsNumber; i++) {
-				DrawGraph(PartsPosition[i].x, PartsPosition[i].y, parts[i], TRUE);
-			}
-		}
-		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
-			DrawGraph(PlatePosition.x, PlatePosition.y, ghost, TRUE);
-		}
 		// スコア
 		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", score);
 		// 右クリックで元の絵と比較
