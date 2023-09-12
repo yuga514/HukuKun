@@ -43,7 +43,7 @@ private: // メンバ変数
 	int buttonLog = 0;
 	unsigned int scene = 0;
 
-	const XMINT2 ButtonPosition[7] = { { 512,360 }, { 512,606 }, { 100,606 }, { 924,606 } };
+	const XMINT2 ButtonPosition[5] = { { 512,350 }, { 512,478 }, { 512,606 }, { 100,606 }, { 924,606 } };
 	XMINT2 ClickPosition = {};
 	XMINT2 MousePosition = {};
 

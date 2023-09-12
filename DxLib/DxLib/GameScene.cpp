@@ -48,7 +48,7 @@ void GameScene::Initialize()
 	button[13] = LoadGraph("Resources/button/button7.png");
 	hand = LoadGraph("Resources/hand3.png");
 	title = LoadGraph("Resources/title.png");
-	background = LoadGraph("Resources/background.png");
+	background = LoadGraph("Resources/gamebackground.png");
 	ghost = LoadGraph("Resources/ghost/ghost.png");
 	okame = LoadGraph("Resources/okame/okame.png");
 	hyottoko = LoadGraph("Resources/hyottoko/hyottoko.png");
@@ -298,7 +298,10 @@ void GameScene::Draw()
 // サンプル表示の時に共通して描画するもの
 void GameScene::SampleDraw()
 {
-	DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
+	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
+	if (ButtonCollision(2) == true) {
+		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[3], TRUE);
+	}
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
