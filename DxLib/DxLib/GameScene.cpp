@@ -31,7 +31,7 @@ void GameScene::Initialize()
 	// 画像などのリソースデータの読み込み
 	font_path = "Resources/font/DFP勘亭流.ttf";
 	AddFontResourceEx(font_path, FR_PRIVATE, NULL);
-	ChangeFont("ＤＦＰ勘亭流", DX_CHARSET_DEFAULT);
+	fontHandle = CreateFontToHandle("ＤＦＰ勘亭流", 64, 8);
 	button[0] = LoadGraph("Resources/button/button1Black.png");
 	button[1] = LoadGraph("Resources/button/button1.png");
 	button[2] = LoadGraph("Resources/button/button2Black.png");
@@ -202,9 +202,8 @@ void GameScene::Draw()
 	if (scene == SAMPLE1) {
 		DrawGraph(0, 0, background, TRUE);
 		DrawGraph(384, 104, ghost, TRUE);
+		DrawFormatStringToHandle(350, 50, GetColor(0, 0, 0), fontHandle, "スコア50以上でクリア");
 		SampleDraw();
-		// スコア50以上でクリア
-		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア50以上でクリア");
 	}
 	// ステージ1
 	if (scene == STAGE1) {
@@ -220,8 +219,8 @@ void GameScene::Draw()
 					DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[11], TRUE);
 				}
 			}
+			DrawFormatStringToHandle(500, 50, GetColor(0, 0, 0), fontHandle, "スコア:%d", stageOne->GetScore());
 			StageDraw();
-			DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", stageOne->GetScore());
 		}
 	}
 	// サンプル2

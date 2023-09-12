@@ -60,8 +60,8 @@ private: // ÉÅÉìÉoïœêî
 	bool scoreFlag[5] = {};
 
 	const XMINT2 PerfectPartsPosition[5] = { { 480,200 }, { 672,200 }, { 576,296 }, { 368,328 }, { 784,328 } };
-	const XMINT2 DefaultPartsPosition[5] = { { 100,100 }, { 100,300 }, { 100,500 }, { 1052,200 }, { 1052,400 } };
-	XMINT2 PartsPosition[5] = { { 100,100 }, { 100,300 }, { 100,500 }, { 1052,200 }, { 1052,400 } };
+	const XMINT2 DefaultPartsPosition[5] = { { 50,50 }, { 50,250 }, { 50,450 }, { 1002,150 }, { 1002,350 } };
+	XMINT2 PartsPosition[5] = { { 50,50 }, { 50,250 }, { 50,450 }, { 1002,150 }, { 1002,350 } };
 	XMINT2 MousePosition = {};
 	XMINT2 PlatePosition = { 384,104 };
 
