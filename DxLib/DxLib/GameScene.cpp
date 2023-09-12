@@ -8,7 +8,8 @@ GameScene::GameScene()
 // デストラクタ
 GameScene::~GameScene()
 {
-	for (int i = 0; i < 7; i++) {
+	RemoveFontResourceEx(font_path, FR_PRIVATE, NULL);
+	for (int i = 0; i < 14; i++) {
 		DeleteGraph(button[i]);
 	}
 	DeleteGraph(hand);
@@ -28,13 +29,23 @@ GameScene::~GameScene()
 void GameScene::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	button[0] = LoadGraph("Resources/button/button1.png");
-	button[1] = LoadGraph("Resources/button/button2.png");
-	button[2] = LoadGraph("Resources/button/button3.png");
-	button[3] = LoadGraph("Resources/button/button4.png");
-	button[4] = LoadGraph("Resources/button/button5.png");
-	button[5] = LoadGraph("Resources/button/button6.png");
-	button[6] = LoadGraph("Resources/button/button7.png");
+	font_path = "Resources/font/DFP勘亭流.ttf";
+	AddFontResourceEx(font_path, FR_PRIVATE, NULL);
+	ChangeFont("ＤＦＰ勘亭流", DX_CHARSET_DEFAULT);
+	button[0] = LoadGraph("Resources/button/button1Black.png");
+	button[1] = LoadGraph("Resources/button/button1.png");
+	button[2] = LoadGraph("Resources/button/button2Black.png");
+	button[3] = LoadGraph("Resources/button/button2.png");
+	button[4] = LoadGraph("Resources/button/button3Black.png");
+	button[5] = LoadGraph("Resources/button/button3.png");
+	button[6] = LoadGraph("Resources/button/button4Black.png");
+	button[7] = LoadGraph("Resources/button/button4.png");
+	button[8] = LoadGraph("Resources/button/button5Black.png");
+	button[9] = LoadGraph("Resources/button/button5.png");
+	button[10] = LoadGraph("Resources/button/button6Black.png");
+	button[11] = LoadGraph("Resources/button/button6.png");
+	button[12] = LoadGraph("Resources/button/button7Black.png");
+	button[13] = LoadGraph("Resources/button/button7.png");
 	hand = LoadGraph("Resources/hand3.png");
 	title = LoadGraph("Resources/title.png");
 	background = LoadGraph("Resources/background.png");
@@ -181,11 +192,10 @@ void GameScene::Draw()
 	// タイトル
 	if (scene == TITLE) {
 		DrawGraph(0, 0, title, TRUE);
-		if (ButtonCollision(0) == false) {
-			SetDrawBright(127, 127, 127);
-		}
 		DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[0], TRUE);
-		SetDrawBright(255, 255, 255);
+		if (ButtonCollision(0) == true) {
+			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[1], TRUE);
+		}
 		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 	}
 	// サンプル1
@@ -208,6 +218,7 @@ void GameScene::Draw()
 				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
 			}
 			StageDraw();
+			DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", stageOne->GetScore());
 		}
 	}
 	// サンプル2
@@ -287,27 +298,14 @@ void GameScene::Draw()
 // サンプル表示の時に共通して描画するもの
 void GameScene::SampleDraw()
 {
-	if (ButtonCollision(1) == false) {
-		SetDrawBright(127, 127, 127);
-	}
 	DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
-	SetDrawBright(255, 255, 255);
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
 // ステージ終了の時に共通して描画するもの
 void GameScene::StageDraw()
 {
-	if (ButtonCollision(2) == false) {
-		SetDrawBright(127, 127, 127);
-		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
-	}
-	SetDrawBright(255, 255, 255);
 	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
-	if (ButtonCollision(3) == false) {
-		SetDrawBright(127, 127, 127);
-	}
-	SetDrawBright(255, 255, 255);
 	DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[4], TRUE);
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }

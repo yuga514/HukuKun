@@ -88,14 +88,6 @@ void StageOne::Draw()
 			DrawGraph(MousePosition.x - 32, MousePosition.y - 32, hand2, TRUE);
 		}
 	}
-
-	// スコア
-	if (alpha == 255) {
-		// スコア
-		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", score);
-		// 右クリックで元の絵と比較
-		DrawFormatString(0, 20, GetColor(0, 0, 0), "右クリックで元の絵と比較");
-	}
 }
 
 // 当たり判定
