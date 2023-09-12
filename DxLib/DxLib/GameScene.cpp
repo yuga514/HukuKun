@@ -86,21 +86,21 @@ void GameScene::Update()
 	}
 	// サンプル1
 	if (scene == SAMPLE1) {
-		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+		if (ButtonCheck() == true && ButtonCollision(2) == true) {
 			scene = STAGE1;
 		}
 	}
 	// ステージ1
 	if (scene == STAGE1) {
 		if (ButtonCheck() == true && stageOne->GetAlpha() == 255) {
-			if (ButtonCollision(1) && 50 <= stageOne->GetScore()) {
+			if (ButtonCollision(2) && 50 <= stageOne->GetScore()) {
 				scene = SAMPLE2;
 			}
-			if (ButtonCollision(2)) {
+			if (ButtonCollision(3)) {
 				scene = TITLE;
 				Reset();
 			}
-			if (ButtonCollision(3)) {
+			if (ButtonCollision(4)) {
 				scene = SAMPLE1;
 				stageOne->Reset();
 			}
@@ -215,7 +215,10 @@ void GameScene::Draw()
 				DrawGraph(384, 104, ghost, TRUE);
 			}
 			if (50 <= stageOne->GetScore()) {
-				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
+				DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[10], TRUE);
+				if (ButtonCollision(2) == true) {
+					DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[11], TRUE);
+				}
 			}
 			StageDraw();
 			DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア:%d", stageOne->GetScore());
@@ -298,9 +301,9 @@ void GameScene::Draw()
 // サンプル表示の時に共通して描画するもの
 void GameScene::SampleDraw()
 {
-	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
+	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[6], TRUE);
 	if (ButtonCollision(2) == true) {
-		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[3], TRUE);
+		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[7], TRUE);
 	}
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
@@ -308,8 +311,14 @@ void GameScene::SampleDraw()
 // ステージ終了の時に共通して描画するもの
 void GameScene::StageDraw()
 {
-	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
-	DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[4], TRUE);
+	DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[8], TRUE);
+	if (ButtonCollision(3) == true) {
+		DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[9], TRUE);
+	}
+	DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[12], TRUE);
+	if (ButtonCollision(4) == true) {
+		DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[13], TRUE);
+	}
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 

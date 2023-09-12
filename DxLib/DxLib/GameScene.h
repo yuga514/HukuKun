@@ -67,8 +67,7 @@ private: // メンバ変数
 	};
 
 	// 画像などのリソースデータの変数宣言
-	LPCSTR font_path;
-	//CreateFontToHandle
+	LPCSTR font_path = 0;
 	int button[14] = {};
 	int hand = 0;
 	int title = 0;
