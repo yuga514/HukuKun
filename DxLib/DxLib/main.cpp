@@ -1,6 +1,6 @@
 #include "GameScene.h"
 
-const char TITLE[] = "福来たる";
+const char TITLE[] = "4027_福来たる";
 
 const int WIN_WIDTH = 1280; // ウィンドウ横幅
 const int WIN_HEIGHT = 720; // ウィンドウ縦幅
