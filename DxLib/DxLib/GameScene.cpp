@@ -8,7 +8,7 @@ GameScene::GameScene()
 // デストラクタ
 GameScene::~GameScene()
 {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 7; i++) {
 		DeleteGraph(button[i]);
 	}
 	DeleteGraph(hand);
@@ -28,11 +28,13 @@ GameScene::~GameScene()
 void GameScene::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	button[0] = LoadGraph("Resources/button/button4.png");
-	button[1] = LoadGraph("Resources/button/button5.png");
-	button[2] = LoadGraph("Resources/button/button.png");
-	button[3] = LoadGraph("Resources/button/button2.png");
-	button[4] = LoadGraph("Resources/button/button3.png");
+	button[0] = LoadGraph("Resources/button/button1.png");
+	button[1] = LoadGraph("Resources/button/button2.png");
+	button[2] = LoadGraph("Resources/button/button3.png");
+	button[3] = LoadGraph("Resources/button/button4.png");
+	button[4] = LoadGraph("Resources/button/button5.png");
+	button[5] = LoadGraph("Resources/button/button6.png");
+	button[6] = LoadGraph("Resources/button/button7.png");
 	hand = LoadGraph("Resources/hand3.png");
 	title = LoadGraph("Resources/title.png");
 	background = LoadGraph("Resources/background.png");
@@ -179,7 +181,11 @@ void GameScene::Draw()
 	// タイトル
 	if (scene == TITLE) {
 		DrawGraph(0, 0, title, TRUE);
+		if (ButtonCollision(0) == false) {
+			SetDrawBright(127, 127, 127);
+		}
 		DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[0], TRUE);
+		SetDrawBright(255, 255, 255);
 		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 	}
 	// サンプル1
@@ -281,14 +287,27 @@ void GameScene::Draw()
 // サンプル表示の時に共通して描画するもの
 void GameScene::SampleDraw()
 {
+	if (ButtonCollision(1) == false) {
+		SetDrawBright(127, 127, 127);
+	}
 	DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[1], TRUE);
+	SetDrawBright(255, 255, 255);
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
 // ステージ終了の時に共通して描画するもの
 void GameScene::StageDraw()
 {
+	if (ButtonCollision(2) == false) {
+		SetDrawBright(127, 127, 127);
+		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
+	}
+	SetDrawBright(255, 255, 255);
 	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[2], TRUE);
+	if (ButtonCollision(3) == false) {
+		SetDrawBright(127, 127, 127);
+	}
+	SetDrawBright(255, 255, 255);
 	DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[4], TRUE);
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
