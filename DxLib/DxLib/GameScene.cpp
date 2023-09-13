@@ -80,9 +80,18 @@ void GameScene::Update()
 
 	// タイトル
 	if (scene == TITLE) {
-		if (ButtonCheck() == true && ButtonCollision(0) == true) {
-			scene = SAMPLE1;
+		if (ButtonCheck() == true) {
+			if (ButtonCollision(0) == true) {
+				scene = SAMPLE1;
+			}
+			if (ButtonCollision(2) == true) {
+				scene = SELECT;
+			}
 		}
+	}
+	// 顔選択
+	if (scene == SELECT) {
+
 	}
 	// サンプル1
 	if (scene == SAMPLE1) {
@@ -109,21 +118,21 @@ void GameScene::Update()
 	}
 	// サンプル2
 	if (scene == SAMPLE2) {
-		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+		if (ButtonCheck() == true && ButtonCollision(2) == true) {
 			scene = STAGE2;
 		}
 	}
 	// ステージ2
 	if (scene == STAGE2) {
 		if (ButtonCheck() == true && stageTwo->GetAlpha() == 255) {
-			if (ButtonCollision(1) && 60 <= stageTwo->GetScore()) {
+			if (ButtonCollision(2) && 60 <= stageTwo->GetScore()) {
 				scene = SAMPLE3;
 			}
-			if (ButtonCollision(2)) {
+			if (ButtonCollision(3)) {
 				scene = TITLE;
 				Reset();
 			}
-			if (ButtonCollision(3)) {
+			if (ButtonCollision(4)) {
 				scene = SAMPLE2;
 				stageTwo->Reset();
 			}
@@ -132,21 +141,21 @@ void GameScene::Update()
 	}
 	// サンプル3
 	if (scene == SAMPLE3) {
-		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+		if (ButtonCheck() == true && ButtonCollision(2) == true) {
 			scene = STAGE3;
 		}
 	}
 	// ステージ3
 	if (scene == STAGE3) {
 		if (ButtonCheck() == true && stageThree->GetAlpha() == 255) {
-			if (ButtonCollision(1) && 70 <= stageThree->GetScore()) {
+			if (ButtonCollision(2) && 70 <= stageThree->GetScore()) {
 				scene = SAMPLE4;
 			}
-			if (ButtonCollision(2)) {
+			if (ButtonCollision(3)) {
 				scene = TITLE;
 				Reset();
 			}
-			if (ButtonCollision(3)) {
+			if (ButtonCollision(4)) {
 				scene = SAMPLE3;
 				stageThree->Reset();
 			}
@@ -155,21 +164,21 @@ void GameScene::Update()
 	}
 	// サンプル4
 	if (scene == SAMPLE4) {
-		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+		if (ButtonCheck() == true && ButtonCollision(2) == true) {
 			scene = STAGE4;
 		}
 	}
 	// ステージ4
 	if (scene == STAGE4) {
 		if (ButtonCheck() == true && stageFour->GetAlpha() == 255) {
-			if (ButtonCollision(1) && 80 <= stageFour->GetScore()) {
+			if (ButtonCollision(2) && 80 <= stageFour->GetScore()) {
 				scene = CLEAR;
 			}
-			if (ButtonCollision(2)) {
+			if (ButtonCollision(3)) {
 				scene = TITLE;
 				Reset();
 			}
-			if (ButtonCollision(3)) {
+			if (ButtonCollision(4)) {
 				scene = SAMPLE4;
 				stageFour->Reset();
 			}
@@ -178,7 +187,7 @@ void GameScene::Update()
 	}
 	// クリア
 	if (scene == CLEAR) {
-		if (ButtonCheck() == true && ButtonCollision(1) == true) {
+		if (ButtonCheck() == true && ButtonCollision(2) == true) {
 			scene = TITLE;
 			Reset();
 		}
@@ -196,110 +205,74 @@ void GameScene::Draw()
 		if (ButtonCollision(0) == true) {
 			DrawGraph(ButtonPosition[0].x, ButtonPosition[0].y, button[1], TRUE);
 		}
+		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[4], TRUE);
+		if (ButtonCollision(2) == true) {
+			DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[5], TRUE);
+		}
 		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
+	}
+	// 顔選択
+	if (scene == SELECT) {
+		DrawGraph(0, 0, background, TRUE);
 	}
 	// サンプル1
 	if (scene == SAMPLE1) {
-		DrawGraph(0, 0, background, TRUE);
-		DrawGraph(384, 104, ghost, TRUE);
-		DrawFormatStringToHandle(350, 50, GetColor(0, 0, 0), fontHandle, "スコア50以上でクリア");
-		SampleDraw();
+		SampleDraw(ghost, 50);
 	}
 	// ステージ1
 	if (scene == STAGE1) {
 		DrawGraph(0, 0, background, TRUE);
 		stageOne->Draw();
-		if (stageOne->GetAlpha() == 255) {
-			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
-				DrawGraph(384, 104, ghost, TRUE);
-			}
-			if (50 <= stageOne->GetScore()) {
-				DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[10], TRUE);
-				if (ButtonCollision(2) == true) {
-					DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[11], TRUE);
-				}
-			}
-			DrawFormatStringToHandle(500, 50, GetColor(0, 0, 0), fontHandle, "スコア:%d", stageOne->GetScore());
-			StageDraw();
-		}
+		StageDraw(ghost, 50, stageOne->GetScore(), stageOne->GetAlpha());
 	}
 	// サンプル2
 	if (scene == SAMPLE2) {
-		DrawGraph(0, 0, background, TRUE);
-		DrawGraph(384, 104, okame, TRUE);
-		SampleDraw();
-		// スコア60以上でクリア
-		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア60以上でクリア");
+		SampleDraw(okame, 60);
 	}
 	// ステージ2
 	if (scene == STAGE2) {
 		DrawGraph(0, 0, background, TRUE);
 		stageTwo->Draw();
-		if (stageTwo->GetAlpha() == 255) {
-			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
-				DrawGraph(384, 104, okame, TRUE);
-			}
-			if (60 <= stageTwo->GetScore()) {
-				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
-			}
-			StageDraw();
-		}
+		StageDraw(okame, 60, stageTwo->GetScore(), stageTwo->GetAlpha());
 	}
 	// サンプル3
 	if (scene == SAMPLE3) {
-		DrawGraph(0, 0, background, TRUE);
-		DrawGraph(384, 104, hyottoko, TRUE);
-		SampleDraw();
-		// スコア70以上でクリア
-		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア70以上でクリア");
+		SampleDraw(hyottoko, 70);
 	}
 	// ステージ3
 	if (scene == STAGE3) {
 		DrawGraph(0, 0, background, TRUE);
 		stageThree->Draw();
-		if (stageThree->GetAlpha() == 255) {
-			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
-				DrawGraph(384, 104, hyottoko, TRUE);
-			}
-			if (70 <= stageThree->GetScore()) {
-				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
-			}
-			StageDraw();
-		}
+		StageDraw(hyottoko, 70, stageThree->GetScore(), stageThree->GetAlpha());
 	}
 	// サンプル4
 	if (scene == SAMPLE4) {
-		DrawGraph(0, 0, background, TRUE);
-		DrawGraph(384, 104, franken, TRUE);
-		SampleDraw();
-		// スコア80以上でクリア
-		DrawFormatString(0, 0, GetColor(0, 0, 0), "スコア80以上でクリア");
+		SampleDraw(franken, 80);
 	}
 	// ステージ4
 	if (scene == STAGE4) {
 		DrawGraph(0, 0, background, TRUE);
 		stageFour->Draw();
-		if (stageFour->GetAlpha() == 255) {
-			if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
-				DrawGraph(384, 104, franken, TRUE);
-			}
-			if (80 <= stageFour->GetScore()) {
-				DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[3], TRUE);
-			}
-			StageDraw();
-		}
+		StageDraw(franken, 80, stageFour->GetScore(), stageFour->GetAlpha());
 	}
 	// クリア
 	if (scene == CLEAR) {
+		DrawGraph(0, 0, background, TRUE);
 		DrawGraph(0, 0, clear, TRUE);
-		DrawGraph(ButtonPosition[1].x, ButtonPosition[1].y, button[2], TRUE);
+		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[8], TRUE);
+		if (ButtonCollision(2) == true) {
+			DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[9], TRUE);
+		}
 		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 	}
 }
 
-// サンプル表示の時に共通して描画するもの
-void GameScene::SampleDraw()
+// サンプル表示の時に描画するもの
+void GameScene::SampleDraw(int graphHandle, unsigned int norma)
 {
+	DrawGraph(0, 0, background, TRUE);
+	DrawGraph(384, 104, graphHandle, TRUE);
+	DrawFormatStringToHandle(350, 50, GetColor(0, 0, 0), fontHandle, "スコア%d以上でクリア", norma);
 	DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[6], TRUE);
 	if (ButtonCollision(2) == true) {
 		DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[7], TRUE);
@@ -307,18 +280,30 @@ void GameScene::SampleDraw()
 	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
-// ステージ終了の時に共通して描画するもの
-void GameScene::StageDraw()
+// ステージ終了の時に描画するもの
+void GameScene::StageDraw(int graphHandle, unsigned int norma, float score, unsigned int alpha)
 {
-	DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[8], TRUE);
-	if (ButtonCollision(3) == true) {
-		DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[9], TRUE);
+	if (alpha == 255) {
+		if ((GetMouseInput() & MOUSE_INPUT_RIGHT) != 0) {
+			DrawGraph(384, 104, graphHandle, TRUE);
+		}
+		DrawFormatStringToHandle(500, 50, GetColor(0, 0, 0), fontHandle, "スコア:%d", (int)score);
+		if (norma <= score) {
+			DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[10], TRUE);
+			if (ButtonCollision(2) == true) {
+				DrawGraph(ButtonPosition[2].x, ButtonPosition[2].y, button[11], TRUE);
+			}
+		}
+		DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[8], TRUE);
+		if (ButtonCollision(3) == true) {
+			DrawGraph(ButtonPosition[3].x, ButtonPosition[3].y, button[9], TRUE);
+		}
+		DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[12], TRUE);
+		if (ButtonCollision(4) == true) {
+			DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[13], TRUE);
+		}
+		DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 	}
-	DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[12], TRUE);
-	if (ButtonCollision(4) == true) {
-		DrawGraph(ButtonPosition[4].x, ButtonPosition[4].y, button[13], TRUE);
-	}
-	DrawGraph(MousePosition.x - 23, MousePosition.y - 13, hand, TRUE);
 }
 
 // リセット
