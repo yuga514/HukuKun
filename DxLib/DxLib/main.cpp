@@ -49,6 +49,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		ClearDrawScreen();
 		//---------  ここからプログラムを記述  ---------//
 
+		// サウンド処理
+		gameScene->Sound();
+
 		// 更新処理
 		gameScene->Update();
 

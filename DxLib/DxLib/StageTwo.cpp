@@ -20,8 +20,8 @@ StageTwo::~StageTwo()
 void StageTwo::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	hand1 = LoadGraph("Resources/hand1.png");
-	hand2 = LoadGraph("Resources/hand2.png");
+	hand1 = LoadGraph("Resources/hand/hand1.png");
+	hand2 = LoadGraph("Resources/hand/hand2.png");
 	plate = LoadGraph("Resources/okame/plate.png");
 	parts[0] = LoadGraph("Resources/okame/LeftEye.png");
 	parts[1] = LoadGraph("Resources/okame/RightEye.png");

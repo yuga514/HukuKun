@@ -20,8 +20,8 @@ StageFour::~StageFour()
 void StageFour::Initialize()
 {
 	// 画像などのリソースデータの読み込み
-	hand1 = LoadGraph("Resources/hand1.png");
-	hand2 = LoadGraph("Resources/hand2.png");
+	hand1 = LoadGraph("Resources/hand/hand1.png");
+	hand2 = LoadGraph("Resources/hand/hand2.png");
 	plate = LoadGraph("Resources/franken/plate.png");
 	parts[0] = LoadGraph("Resources/franken/LeftEye.png");
 	parts[1] = LoadGraph("Resources/franken/RightEye.png");

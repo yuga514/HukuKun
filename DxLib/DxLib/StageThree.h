@@ -50,11 +50,18 @@ public: // メンバ関数
 	// アルファ値の取得
 	unsigned int GetAlpha() { return alpha; }
 
+	// セレクトフラグの取得
+	bool GetSelectFlag() { return selectFlag; }
+
+	// セレクトフラグの設定
+	void SetSelectFlag() { selectFlag = true; }
+
 private: // メンバ変数
 	const int judge[5] = { 7,14,21,28,35 };
 	const int partsNumber = 8;
 	float score = 0.0f;
 	unsigned int alpha = 0;
+	bool selectFlag = false;
 	bool catchFlag[8] = {};
 	bool drawFlag[8] = {};
 	bool scoreFlag[8] = {};
