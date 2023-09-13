@@ -50,19 +50,26 @@ public: // メンバ関数
 	// アルファ値の取得
 	unsigned int GetAlpha() { return alpha; }
 
+	// セレクトフラグの取得
+	bool GetSelectFlag() { return selectFlag; }
+
+	// セレクトフラグの設定
+	void SetSelectFlag() { selectFlag = true; }
+
 private: // メンバ変数
 	const int judge[5] = { 7,14,21,28,35 };
 	const int partsNumber = 10;
 	float score = 0;
 	unsigned int alpha = 0;
+	bool selectFlag = false;
 	bool catchFlag[10] = {};
 	bool drawFlag[10] = {};
 	bool scoreFlag[10] = {};
 
 	const XMINT2 PerfectPartsPosition[10] = { { 502,300 }, { 650,300 }, { 575,434 }, { 464,198 }, { 687,182 },
 												{ 567,373 }, { 496,247 }, { 648,240 }, { 377,158 }, { 787,158 } };
-	const XMINT2 DefaultPartsPosition[10] = { { 100,100 }, { 100,300 }, { 100,500 }, { 200,200 }, { 200,400 },
-												{ 952,100 }, { 952,300 }, { 952,500 }, { 1052,200 }, { 1052,400 } };
+	const XMINT2 DefaultPartsPosition[10] = { { 50,50 }, { 50,250 }, { 50,450 }, { 150,150 }, { 150,350 },
+												{ 1002,50 }, { 1002,250 }, { 1002,450 }, { 1102,150 }, { 1102,350 } };
 	XMINT2 PartsPosition[10] = { { 50,50 }, { 50,250 }, { 50,450 }, { 150,150 }, { 150,350 },
 									{ 1002,50 }, { 1002,250 }, { 1002,450 }, { 1102,150 }, { 1102,350 } };
 	XMINT2 MousePosition = {};
