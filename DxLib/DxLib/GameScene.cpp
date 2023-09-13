@@ -99,9 +99,9 @@ void GameScene::Initialize()
 	clearSE = LoadSoundMem("Resources/audio/clear.mp3");
 
 	// 音調調整
-	ChangeVolumeSoundMem(255 * 75 / 100, titleBGM);
-	ChangeVolumeSoundMem(255 * 75 / 100, kuonBGM);
-	ChangeVolumeSoundMem(255 * 1000 / 100, buttonSE);
+	ChangeVolumeSoundMem(255 * 50 / 100, titleBGM);
+	ChangeVolumeSoundMem(255 * 50 / 100, kuonBGM);
+	ChangeVolumeSoundMem(255 * 500 / 100, buttonSE);
 	ChangeVolumeSoundMem(255 * 100 / 100, hajimeSE);
 	ChangeVolumeSoundMem(255 * 100 / 100, successSE);
 	ChangeVolumeSoundMem(255 * 100 / 100, failedSE);
