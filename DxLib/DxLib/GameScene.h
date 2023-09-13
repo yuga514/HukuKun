@@ -24,11 +24,11 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
-	// サンプル表示の時に共通して描画するもの
-	void SampleDraw();
+	// サンプル表示の時に描画するもの
+	void SampleDraw(int graphHandle, unsigned int norma);
 
-	// ステージ終了の時に共通して描画するもの
-	void StageDraw();
+	// ステージ終了の時に描画するもの
+	void StageDraw(int graphHandle, unsigned int norma, float score, unsigned int alpha);
 
 	// リセット
 	void Reset();
@@ -55,6 +55,7 @@ private: // メンバ変数
 	enum sceneName
 	{
 		TITLE,
+		SELECT,
 		SAMPLE1,
 		STAGE1,
 		SAMPLE2,

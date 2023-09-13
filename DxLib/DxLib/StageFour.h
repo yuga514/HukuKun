@@ -45,7 +45,7 @@ public: // メンバ関数
 	bool DrawCheck();
 
 	// スコアの取得
-	unsigned int GetScore() { return score; }
+	float GetScore() { return score; }
 
 	// アルファ値の取得
 	unsigned int GetAlpha() { return alpha; }
@@ -53,7 +53,7 @@ public: // メンバ関数
 private: // メンバ変数
 	const int judge[5] = { 7,14,21,28,35 };
 	const int partsNumber = 10;
-	unsigned int score = 0;
+	float score = 0;
 	unsigned int alpha = 0;
 	bool catchFlag[10] = {};
 	bool drawFlag[10] = {};
@@ -63,8 +63,8 @@ private: // メンバ変数
 												{ 567,373 }, { 496,247 }, { 648,240 }, { 377,158 }, { 787,158 } };
 	const XMINT2 DefaultPartsPosition[10] = { { 100,100 }, { 100,300 }, { 100,500 }, { 200,200 }, { 200,400 },
 												{ 952,100 }, { 952,300 }, { 952,500 }, { 1052,200 }, { 1052,400 } };
-	XMINT2 PartsPosition[10] = { { 100,100 }, { 100,300 }, { 100,500 }, { 200,200 }, { 200,400 },
-									{ 952,100 }, { 952,300 }, { 952,500 }, { 1052,200 }, { 1052,400 } };
+	XMINT2 PartsPosition[10] = { { 50,50 }, { 50,250 }, { 50,450 }, { 150,150 }, { 150,350 },
+									{ 1002,50 }, { 1002,250 }, { 1002,450 }, { 1102,150 }, { 1102,350 } };
 	XMINT2 MousePosition = {};
 	XMINT2 PlatePosition = { 384,104 };
 

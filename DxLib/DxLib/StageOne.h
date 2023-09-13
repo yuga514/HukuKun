@@ -45,7 +45,7 @@ public: // メンバ関数
 	bool DrawCheck();
 
 	// スコアの取得
-	unsigned int GetScore() { return score; }
+	float GetScore() { return score; }
 
 	// アルファ値の取得
 	unsigned int GetAlpha() { return alpha; }
@@ -53,7 +53,7 @@ public: // メンバ関数
 private: // メンバ変数
 	const int judge[5] = { 7,14,21,28,35 };
 	const int partsNumber = 5;
-	unsigned int score = 0;
+	float score = 0.0f;
 	unsigned int alpha = 0;
 	bool catchFlag[5] = {};
 	bool drawFlag[5] = {};

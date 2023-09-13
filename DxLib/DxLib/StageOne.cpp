@@ -127,19 +127,19 @@ void StageOne::ScoreAddition(unsigned int number)
 	// 顔にパーツを置いたら、スコアを判定する
 	if (scoreFlag[number] == false && drawFlag[number] == true) {
 		if (PartsCollisionCheck(number, 0) == true) {
-			score += 20;
+			score += 20.0f;
 		}
 		else if (PartsCollisionCheck(number, 1) == true) {
-			score += 16;
+			score += 16.0f;
 		}
 		else if (PartsCollisionCheck(number, 2) == true) {
-			score += 12;
+			score += 12.0f;
 		}
 		else if (PartsCollisionCheck(number, 3) == true) {
-			score += 8;
+			score += 8.0f;
 		}
 		else if (PartsCollisionCheck(number, 4) == true) {
-			score += 4;
+			score += 4.0f;
 		}
 		scoreFlag[number] = true;
 	}
